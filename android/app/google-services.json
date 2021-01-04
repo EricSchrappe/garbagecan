@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "353024208334",
+    "project_id": "garbagecan-9acd8",
+    "storage_bucket": "garbagecan-9acd8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353024208334:android:8d805b84efa3815e20cf9f",
+        "android_client_info": {
+          "package_name": "de.tuBerlinTeam20.garbagecan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "353024208334-cvb1f5qk1oppev7n594t6fvh9ofe5o2v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPn51HWwxUZJecpL3XjCPrrX-6V5vHIWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353024208334-cvb1f5qk1oppev7n594t6fvh9ofe5o2v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "353024208334-emc962n944n6cvc588rat7k48ncovems.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "de.tuBerlinTeam20.garbagecan"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
