@@ -14,10 +14,10 @@ class LocationData {
   }
 
   Future<String> getAddressForCoordinates() async {
-    this.getLocation();
     final coordinates = Coordinates(_latitude, _longitude);
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    print(addresses[0].addressLine);
     return addresses[0].addressLine;
   }
 }

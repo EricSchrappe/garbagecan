@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:garbagecan/services/location_data.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'select_pickup_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -11,14 +12,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
   CalendarController _calendarController;
   TextEditingController _textController = TextEditingController();
 
-  String dynHintText = 'Please enter your address';
-  String initValue;
+  String addressText = 'Please enter your address';
   LocationData location = LocationData();
 
   @override
   void initState() {
     super.initState();
     _calendarController = CalendarController();
+    location.getLocation();
   }
 
   @override
@@ -43,11 +44,32 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
       ),
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.list,
+            color: Colors.white,
+            size: 25.0,
+          ),
+          backgroundColor: Color(0xFF3A6ED4),
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: SelectPickUpScreen(),
+                ),
+              ),
+            );
+          },
+        ),
         body: Column(
           children: [
             Padding(
               padding: EdgeInsets.only(
-                  top: 60.0, right: 35.0, left: 35.0, bottom: 40.0),
+                  top: 60.0, right: 35.0, left: 35.0, bottom: 30.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -94,7 +116,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 .getAddressForCoordinates()
                                 .then((String address) {
                               setState(() {
-                                initValue = address;
+                                addressText = address;
                               });
                             });
                           },
@@ -105,8 +127,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                       Expanded(
                         flex: 15,
-                        child: TextFormField(
-                          initialValue: initValue,
+                        child: TextField(
+                          readOnly: addressText != 'Please enter your address'
+                              ? true
+                              : false,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Color(0xFFF6F6F6),
@@ -120,7 +144,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 color: Color(0xFF3A6ED4),
                               ),
                             ),
-                            hintText: dynHintText,
+                            hintText: addressText,
                             suffixIcon: IconButton(
                               icon: Icon(
                                 Icons.clear,
@@ -153,8 +177,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(30.0),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
                   ),
                 ),
                 child: TableCalendar(

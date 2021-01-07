@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:garbagecan/model/date_slots_data.dart';
 import 'package:garbagecan/screens/calendar_screen.dart';
 import 'package:garbagecan/screens/welcome_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(GarbageCANApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => DateSlotsData(),
+      child: GarbageCANApp(),
+    ),
+  );
 }
 
 class GarbageCANApp extends StatelessWidget {
