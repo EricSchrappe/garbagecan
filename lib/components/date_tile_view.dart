@@ -13,14 +13,12 @@ class DateListTileView extends StatelessWidget {
           padding: EdgeInsets.zero,
           itemBuilder: (context, index) {
             final dateSlot = dateSlotsData.dateSlots[index];
-            return Center(
-              child: DateTile(
-                dateText: dateSlot.dateText,
-                isSelected: dateSlot.isSelected,
-                selectedCallback: (dateSlotState) {
-                  dateSlotsData.selectDateSlot(dateSlot);
-                },
-              ),
+            return DateTile(
+              dateText: dateSlot.dateText,
+              isSelected: dateSlot.isSelected,
+              selectedCallback: () {
+                dateSlotsData.selectDateSlot(dateSlot);
+              },
             );
           },
           itemCount: dateSlotsData.dateSlots.length,

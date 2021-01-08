@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:garbagecan/services/location_data.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'select_pickup_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:garbagecan/model/date_slots_data.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override

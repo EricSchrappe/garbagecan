@@ -26,6 +26,9 @@ class _SelectPickUpScreenState extends State<SelectPickUpScreen> {
               'Available Time-Slots',
               style: TextStyle(color: Color(0xFF444444), fontSize: 22.0),
             ),
+            SizedBox(
+              height: 10.0,
+            ),
             DateListTileView(),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -35,11 +38,10 @@ class _SelectPickUpScreenState extends State<SelectPickUpScreen> {
                 children: [
                   RaisedButton(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 10.0),
+                          horizontal: 20.0, vertical: 10.0),
                       child: Text(
                         'Cancel',
-                        style:
-                            TextStyle(color: Color(0xFF444444), fontSize: 24.0),
+                        style: TextStyle(color: Colors.white, fontSize: 24.0),
                       ),
                       color: Colors.grey,
                       onPressed: () {
@@ -47,7 +49,7 @@ class _SelectPickUpScreenState extends State<SelectPickUpScreen> {
                       }),
                   RaisedButton(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 10.0),
+                          horizontal: 20.0, vertical: 10.0),
                       child: Text(
                         'PickUp',
                         style: TextStyle(color: Colors.white, fontSize: 24.0),
