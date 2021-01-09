@@ -4,6 +4,10 @@ import 'package:garbagecan/model/date_slots_data.dart';
 import 'package:provider/provider.dart';
 
 class DateListTileView extends StatelessWidget {
+  final selectedDate;
+
+  DateListTileView({this.selectedDate});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<DateSlotsData>(
@@ -12,7 +16,7 @@ class DateListTileView extends StatelessWidget {
           shrinkWrap: true,
           padding: EdgeInsets.zero,
           itemBuilder: (context, index) {
-            final dateSlot = dateSlotsData.dateSlots[index];
+            final dateSlot = dateSlotsData.dateSlots[selectedDate][index];
             return DateTile(
               dateText: dateSlot.dateText,
               isSelected: dateSlot.isSelected,
@@ -21,7 +25,7 @@ class DateListTileView extends StatelessWidget {
               },
             );
           },
-          itemCount: dateSlotsData.dateSlots.length,
+          itemCount: dateSlotsData.dateSlots[selectedDate].length,
         );
       },
     );

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:garbagecan/model/date_slots_data.dart';
 import 'package:garbagecan/services/location_data.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'select_pickup_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:garbagecan/model/date_slots_data.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   String addressText = 'Please enter your address';
   LocationData location = LocationData();
+  DateTime selectedDate;
 
   @override
   void initState() {
@@ -61,7 +63,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: Container(
                   padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: SelectPickUpScreen(),
+                  child: SelectPickUpScreen(
+                    selectedDate: selectedDate,
+                  ),
                 ),
               ),
             );
@@ -185,7 +189,33 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ),
                 ),
                 child: TableCalendar(
+                  events: Provider.of<DateSlotsData>(context).dateSlots,
                   calendarController: _calendarController,
+                  calendarStyle: CalendarStyle(
+                    selectedColor: Color(0xFF3A6ED4),
+                    todayColor: Color(0xB33A6ED4),
+                  ),
+                  headerStyle: HeaderStyle(
+                    titleTextStyle: TextStyle(
+                      fontSize: 20.0,
+                      color: Color(0xFF444444),
+                    ),
+                    formatButtonShowsNext: false,
+                    formatButtonDecoration: BoxDecoration(
+                      color: Color(0xFF3A6ED4),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    formatButtonTextStyle: TextStyle(
+                      color: Colors.white,
+                    ),
+                    formatButtonPadding:
+                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  ),
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  onDaySelected: (day, events, holidays) {
+                    selectedDate =
+                        DateTime.parse(DateFormat('yyyy-MM-dd').format(day));
+                  },
                 ),
               ),
             ),
