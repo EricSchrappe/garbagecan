@@ -1,5 +1,4 @@
 import 'package:garbagecan/model/date_slots.dart';
-import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
@@ -11,6 +10,10 @@ class DateSlotsData extends ChangeNotifier {
       DateSlots(dateText: '07:30'),
       DateSlots(dateText: '08:00'),
       DateSlots(dateText: '08:30'),
+      DateSlots(dateText: '09:00'),
+      DateSlots(dateText: '09:00'),
+      DateSlots(dateText: '09:00'),
+      DateSlots(dateText: '09:00'),
       DateSlots(dateText: '09:00'),
     ],
     DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime(2021, 1, 15))): [

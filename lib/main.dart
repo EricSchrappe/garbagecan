@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:garbagecan/model/date_slots_data.dart';
+import 'package:garbagecan/model/item_data.dart';
 import 'package:garbagecan/screens/calendar_screen.dart';
 import 'package:garbagecan/screens/welcome_screen.dart';
 import 'screens/contact_details_screen.dart';
@@ -11,6 +12,9 @@ void main() {
       providers: [
         ChangeNotifierProvider(
           create: (context) => DateSlotsData(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ItemData(),
         ),
       ],
       child: GarbageCANApp(),
