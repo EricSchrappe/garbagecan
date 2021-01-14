@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:garbagecan/components/item_tile_view.dart';
+import 'package:flutter/services.dart';
+import 'package:garbagecan/components/tiles/item_tile_view.dart';
 
 class ContactDetails extends StatelessWidget {
   @override
@@ -119,6 +120,36 @@ class ContactDetails extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
+                      height: 15.0,
+                    ),
+                    Text(
+                      'Phone Number',
+                      style: TextStyle(
+                        color: Color(0xFF444444),
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Color(0xFFF6F6F6),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF3A6ED4),
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF3A6ED4),
+                          ),
+                        ),
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(8.0),
+                      ),
+                    ),
+                    SizedBox(
                       height: 30.0,
                     ),
                     Text(
@@ -130,7 +161,7 @@ class ContactDetails extends StatelessWidget {
                     ),
                     ItemTileView(),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      padding: EdgeInsets.only(top: 25.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,

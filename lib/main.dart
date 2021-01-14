@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:garbagecan/model/date_slots_data.dart';
 import 'package:garbagecan/model/item_data.dart';
-import 'package:garbagecan/screens/calendar_screen.dart';
+import 'package:garbagecan/screens/admin/time_slots_screen.dart';
+import 'package:garbagecan/screens/user/calendar_screen.dart';
+import 'package:garbagecan/components/tabBar/user_tabs.dart';
 import 'package:garbagecan/screens/welcome_screen.dart';
-import 'screens/contact_details_screen.dart';
+import 'screens/user/contact_details_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -33,8 +35,10 @@ class GarbageCANApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => WelcomeScreen(),
+        '/userTabs': (context) => UserTabsPage(),
         '/calendar': (context) => CalendarScreen(),
         '/contact': (context) => ContactDetails(),
+        '/admin': (context) => TimeSlots(),
       },
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:garbagecan/components/date_tile_view.dart';
+import 'package:garbagecan/components/tiles/date_tile_view.dart';
 import 'package:garbagecan/model/date_slots_data.dart';
 import 'package:provider/provider.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ContactDetails extends StatelessWidget {
+class TimeSlots extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,6 +18,7 @@ class ContactDetails extends StatelessWidget {
       ),
       child: Scaffold(
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: EdgeInsets.only(
@@ -51,7 +52,7 @@ class ContactDetails extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
+            Center(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
                 decoration: BoxDecoration(
@@ -125,6 +126,75 @@ class ContactDetails extends StatelessWidget {
                       style: TextStyle(
                         color: Color(0xFF444444),
                         fontSize: 18.0,
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Color(0xFFF6F6F6),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFF3A6ED4),
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFF3A6ED4),
+                                ),
+                              ),
+                              isDense: true,
+                              contentPadding: EdgeInsets.all(8.0),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Text(
+                            ':',
+                            style: TextStyle(fontSize: 30.0),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Color(0xFFF6F6F6),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFF3A6ED4),
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFF3A6ED4),
+                                ),
+                              ),
+                              isDense: true,
+                              contentPadding: EdgeInsets.all(8.0),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 50.0, bottom: 15.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                          color: Color(0xFF3A6ED4),
+                          child: Text(
+                            'Add Time-Slots',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 24.0),
+                          ),
+                          onPressed: () {},
+                        ),
                       ),
                     ),
                   ],

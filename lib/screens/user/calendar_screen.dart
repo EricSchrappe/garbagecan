@@ -93,7 +93,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 20.0,
+                    height: 15.0,
                   ),
                   Text(
                     'Schedule your next PickUp',
@@ -103,7 +103,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 30.0,
+                    height: 20.0,
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
