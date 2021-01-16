@@ -58,8 +58,9 @@ class ContactDetails extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(30.0),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
                   ),
                 ),
                 child: Column(
@@ -159,37 +160,40 @@ class ContactDetails extends StatelessWidget {
                         fontSize: 18.0,
                       ),
                     ),
-                    ItemTileView(),
-                    Padding(
-                      padding: EdgeInsets.only(top: 25.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          RaisedButton(
+                    Expanded(flex: 8, child: ItemTileView()),
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            RaisedButton(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 24.0),
+                                ),
+                                color: Colors.grey,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }),
+                            RaisedButton(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 20.0, vertical: 10.0),
+                              color: Color(0xFF3A6ED4),
                               child: Text(
-                                'Cancel',
+                                'Request PickUp',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 24.0),
                               ),
-                              color: Colors.grey,
-                              onPressed: () {
-                                Navigator.pop(context);
-                              }),
-                          RaisedButton(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 10.0),
-                            color: Color(0xFF3A6ED4),
-                            child: Text(
-                              'Request PickUp',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 24.0),
+                              onPressed: () {},
                             ),
-                            onPressed: () {},
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],

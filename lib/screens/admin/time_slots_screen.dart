@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:garbagecan/components/picker/date_picker.dart';
+import 'package:garbagecan/components/picker/time_picker.dart';
+import 'package:garbagecan/model/date_slots_data.dart';
+import 'package:provider/provider.dart';
 
-class TimeSlots extends StatelessWidget {
+class TimeSlots extends StatefulWidget {
+  @override
+  _TimeSlotsState createState() => _TimeSlotsState();
+}
+
+class _TimeSlotsState extends State<TimeSlots> {
+  TextEditingController _controllerBeginDate = TextEditingController();
+  TextEditingController _controllerEndDate = TextEditingController();
+  TextEditingController _controllerStartTime = TextEditingController();
+  TextEditingController _controllerEndTime = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,23 +85,8 @@ class TimeSlots extends StatelessWidget {
                         fontSize: 18.0,
                       ),
                     ),
-                    TextField(
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xFFF6F6F6),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF3A6ED4),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF3A6ED4),
-                          ),
-                        ),
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(8.0),
-                      ),
+                    TextFieldDatePicker(
+                      controller: _controllerBeginDate,
                     ),
                     SizedBox(
                       height: 15.0,
@@ -99,24 +98,9 @@ class TimeSlots extends StatelessWidget {
                         fontSize: 18.0,
                       ),
                     ),
-                    TextField(
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xFFF6F6F6),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF3A6ED4),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF3A6ED4),
-                          ),
-                        ),
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(8.0),
-                      ),
+                    TextFieldDatePicker(
+                      controller: _controllerEndDate,
+                      withClearButton: true,
                     ),
                     SizedBox(
                       height: 30.0,
@@ -132,23 +116,8 @@ class TimeSlots extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       children: [
                         Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Color(0xFFF6F6F6),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFF3A6ED4),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFF3A6ED4),
-                                ),
-                              ),
-                              isDense: true,
-                              contentPadding: EdgeInsets.all(8.0),
-                            ),
+                          child: TextFieldTimePicker(
+                            controller: _controllerStartTime,
                           ),
                         ),
                         Padding(
@@ -159,23 +128,8 @@ class TimeSlots extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Color(0xFFF6F6F6),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFF3A6ED4),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0xFF3A6ED4),
-                                ),
-                              ),
-                              isDense: true,
-                              contentPadding: EdgeInsets.all(8.0),
-                            ),
+                          child: TextFieldTimePicker(
+                            controller: _controllerEndTime,
                           ),
                         ),
                       ],
@@ -193,7 +147,14 @@ class TimeSlots extends StatelessWidget {
                             style:
                                 TextStyle(color: Colors.white, fontSize: 24.0),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Provider.of<DateSlotsData>(context, listen: false)
+                                .addDateSlots(
+                                    beginDateString: _controllerBeginDate.text,
+                                    endDateString: _controllerEndDate.text,
+                                    startTimeString: _controllerStartTime.text,
+                                    endTimeString: _controllerEndTime.text);
+                          },
                         ),
                       ),
                     ),

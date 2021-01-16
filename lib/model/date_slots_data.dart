@@ -33,4 +33,35 @@ class DateSlotsData extends ChangeNotifier {
     slot.toogleSelected();
     notifyListeners();
   }
+
+  void addDateSlots(
+      {String beginDateString,
+      String endDateString,
+      String startTimeString,
+      String endTimeString}) {
+    DateTime beginDate = DateTime.parse(beginDateString);
+    DateTime endDate = DateTime.parse(endDateString);
+    DateTime startTime = DateFormat.Hm().parse(startTimeString);
+    DateTime endTime = DateFormat.Hm().parse(endTimeString);
+
+    for (var i = 0; i <= endDate.difference(beginDate).inDays; i++) {
+      List<DateSlots> dateSlots = [];
+
+      for (var j = 0;
+          j <= endTime.difference(startTime).inMinutes;
+          j = j + 30) {
+        dateSlots.add(DateSlots(
+            dateText: DateFormat.Hm().format(DateTime(
+                startTime.year,
+                startTime.month,
+                startTime.day,
+                startTime.hour,
+                startTime.minute + j))));
+      }
+
+      _dateSlots[DateTime(beginDate.year, beginDate.month, beginDate.day + i)] =
+          dateSlots;
+    }
+    notifyListeners();
+  }
 }

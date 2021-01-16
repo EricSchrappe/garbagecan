@@ -75,7 +75,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                  top: 60.0, right: 35.0, left: 35.0, bottom: 30.0),
+                  top: 60.0, right: 35.0, left: 35.0, bottom: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
