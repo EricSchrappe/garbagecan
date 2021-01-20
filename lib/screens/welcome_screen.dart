@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  final _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -75,7 +78,11 @@ class WelcomeScreen extends StatelessWidget {
                       fontSize: 15.0),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/userTabs');
+                  final user = _auth.signInWithEmailAndPassword(
+                      email: 'group20@tu-berlin.de', password: 'Group20I&E!');
+                  if (user != null) {
+                    Navigator.pushNamed(context, '/userTabs');
+                  }
                 },
               ),
               SizedBox(
@@ -92,7 +99,11 @@ class WelcomeScreen extends StatelessWidget {
                       fontSize: 15.0),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/admin');
+                  final user = _auth.signInWithEmailAndPassword(
+                      email: 'ahmad@garbagecan.pk', password: 'TUApp2021!');
+                  if (user != null) {
+                    Navigator.pushNamed(context, '/admin');
+                  }
                 },
               ),
             ],

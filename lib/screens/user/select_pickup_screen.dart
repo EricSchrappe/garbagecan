@@ -71,7 +71,18 @@ class _SelectPickUpScreenState extends State<SelectPickUpScreen> {
                       ),
                       color: Color(0xFF3A6ED4),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/contact');
+                        if (Provider.of<DateSlotsData>(context, listen: false)
+                                .getSelectedTime(widget.selectedDate)
+                                .length <
+                            2) {
+                          print('No Time Slot was selected');
+                        } else {
+                          print(
+                              Provider.of<DateSlotsData>(context, listen: false)
+                                  .getSelectedTime(widget.selectedDate));
+                          Navigator.pushNamed(context, '/contact',
+                              arguments: widget.selectedDate);
+                        }
                       })
                 ],
               ),

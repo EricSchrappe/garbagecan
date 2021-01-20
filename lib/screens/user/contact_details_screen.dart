@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:garbagecan/components/tiles/item_tile_view.dart';
+import 'package:garbagecan/model/date_slots_data.dart';
+import 'package:provider/provider.dart';
 
 class ContactDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final selectedDate = ModalRoute.of(context).settings.arguments;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -190,7 +193,11 @@ class ContactDetails extends StatelessWidget {
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 24.0),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                print(Provider.of<DateSlotsData>(context,
+                                        listen: false)
+                                    .getSelectedTime(selectedDate));
+                              },
                             ),
                           ],
                         ),

@@ -25,4 +25,15 @@ class ItemData extends ChangeNotifier {
     item.toogleCheckbox();
     notifyListeners();
   }
+
+  List<String> getSelectedItems() {
+    List<String> selectedItems = [];
+
+    for (Item item in _items) {
+      if (item.isChecked) {
+        selectedItems.add(item.name);
+      }
+    }
+    return selectedItems;
+  }
 }
