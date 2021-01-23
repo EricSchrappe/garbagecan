@@ -15,7 +15,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   CalendarController _calendarController;
   TextEditingController _textController = TextEditingController();
 
-  String addressText = 'Please enter your address';
+  String addressText;
   LocationData location = LocationData();
   DateTime selectedDate;
 
@@ -64,7 +64,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: SelectPickUpScreen(
-                    selectedDate: selectedDate,
+                    selectedDate: selectedDate == null
+                        ? DateTime.parse('9999-01-01')
+                        : selectedDate,
+                    address: addressText,
                   ),
                 ),
               ),
@@ -134,9 +137,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       Expanded(
                         flex: 15,
                         child: TextField(
-                          readOnly: addressText != 'Please enter your address'
-                              ? true
-                              : false,
+                          controller: _textController,
+                          readOnly: addressText != null ? true : false,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Color(0xFFF6F6F6),
@@ -150,7 +152,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 color: Color(0xFF3A6ED4),
                               ),
                             ),
-                            hintText: addressText,
+                            hintText: 'Please enter your address',
                             suffixIcon: IconButton(
                               icon: Icon(
                                 Icons.clear,
@@ -159,6 +161,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               onPressed: () => _textController.clear(),
                             ),
                           ),
+                          onSubmitted: (address) {
+                            _textController.text = address;
+                          },
                         ),
                       ),
                     ],
@@ -174,7 +179,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               fontWeight: FontWeight.bold),
                         ),
                         color: Color(0xFF3A6ED4),
-                        onPressed: () {}),
+                        onPressed: () {
+                          addressText = _textController.text;
+                        }),
                   ),
                 ],
               ),

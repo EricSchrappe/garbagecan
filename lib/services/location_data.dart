@@ -16,6 +16,7 @@ class LocationData {
   Future<String> getAddressForCoordinates() async {
     final coordinates = Coordinates(_latitude, _longitude);
     var addresses =
+        //Geocoder package has a bug, so that we would have to use a google maps API key to get the address from the coordinates
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     print(addresses[0].addressLine);
     return addresses[0].addressLine;

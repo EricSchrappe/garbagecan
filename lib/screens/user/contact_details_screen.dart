@@ -1,13 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:garbagecan/components/tiles/item_tile_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:garbagecan/model/date_slots_data.dart';
+import 'package:garbagecan/model/pickup_data.dart';
+import 'package:garbagecan/model/item_data.dart';
 import 'package:provider/provider.dart';
 
-class ContactDetails extends StatelessWidget {
+class ContactDetails extends StatefulWidget {
+  @override
+  _ContactDetailsState createState() => _ContactDetailsState();
+}
+
+class _ContactDetailsState extends State<ContactDetails> {
+  final TextEditingController _nameController = TextEditingController();
+
+  final TextEditingController _emailController = TextEditingController();
+
+  final TextEditingController _phoneController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  User loggedInUser;
+
+  void getCurrentUser() {
+    final user = _auth.currentUser;
+
+    if (user != null) {
+      loggedInUser = user;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final selectedDate = ModalRoute.of(context).settings.arguments;
+    final Map args = ModalRoute.of(context).settings.arguments;
+
+    final selectedDate = args.values.first;
+    final address = args.values.last;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -77,6 +112,7 @@ class ContactDetails extends StatelessWidget {
                       ),
                     ),
                     TextField(
+                      controller: _nameController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Color(0xFFF6F6F6),
@@ -93,6 +129,9 @@ class ContactDetails extends StatelessWidget {
                         isDense: true,
                         contentPadding: EdgeInsets.all(8.0),
                       ),
+                      onSubmitted: (name) {
+                        _nameController.text = name;
+                      },
                     ),
                     SizedBox(
                       height: 15.0,
@@ -106,6 +145,7 @@ class ContactDetails extends StatelessWidget {
                     ),
                     TextField(
                       keyboardType: TextInputType.emailAddress,
+                      controller: _emailController,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Color(0xFFF6F6F6),
@@ -122,6 +162,9 @@ class ContactDetails extends StatelessWidget {
                         isDense: true,
                         contentPadding: EdgeInsets.all(8.0),
                       ),
+                      onSubmitted: (email) {
+                        _emailController.text = email;
+                      },
                     ),
                     SizedBox(
                       height: 15.0,
@@ -135,6 +178,7 @@ class ContactDetails extends StatelessWidget {
                     ),
                     TextField(
                       keyboardType: TextInputType.number,
+                      controller: _phoneController,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: InputDecoration(
                         filled: true,
@@ -152,6 +196,9 @@ class ContactDetails extends StatelessWidget {
                         isDense: true,
                         contentPadding: EdgeInsets.all(8.0),
                       ),
+                      onSubmitted: (phoneNumber) {
+                        _phoneController.text = phoneNumber;
+                      },
                     ),
                     SizedBox(
                       height: 30.0,
@@ -194,9 +241,27 @@ class ContactDetails extends StatelessWidget {
                                     color: Colors.white, fontSize: 24.0),
                               ),
                               onPressed: () {
-                                print(Provider.of<DateSlotsData>(context,
+                                Provider.of<PickupData>(context, listen: false)
+                                    .addPickup(
+                                  uid: loggedInUser.uid,
+                                  date: Provider.of<DateSlotsData>(context,
+                                          listen: false)
+                                      .getSelectedTime(selectedDate)[0],
+                                  address: address,
+                                  email: _emailController.text,
+                                  name: _nameController.text,
+                                  phoneNumber: _phoneController.text,
+                                  time: Provider.of<DateSlotsData>(context,
+                                          listen: false)
+                                      .getSelectedTime(selectedDate)[1],
+                                  selectedItems: Provider.of<ItemData>(context,
+                                          listen: false)
+                                      .getSelectedItems(),
+                                );
+                                print(Provider.of<PickupData>(context,
                                         listen: false)
-                                    .getSelectedTime(selectedDate));
+                                    .pickupData
+                                    .length);
                               },
                             ),
                           ],

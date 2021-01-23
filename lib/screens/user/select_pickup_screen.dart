@@ -5,8 +5,9 @@ import 'package:provider/provider.dart';
 
 class SelectPickUpScreen extends StatefulWidget {
   final selectedDate;
+  final address;
 
-  SelectPickUpScreen({this.selectedDate});
+  SelectPickUpScreen({this.selectedDate, this.address});
 
   @override
   _SelectPickUpScreenState createState() => _SelectPickUpScreenState();
@@ -35,7 +36,7 @@ class _SelectPickUpScreenState extends State<SelectPickUpScreen> {
             SizedBox(
               height: 10.0,
             ),
-            Provider.of<DateSlotsData>(context)
+            Provider.of<DateSlotsData>(context, listen: false)
                         .dateSlots[widget.selectedDate] ==
                     null
                 ? Text(
@@ -72,6 +73,11 @@ class _SelectPickUpScreenState extends State<SelectPickUpScreen> {
                       color: Color(0xFF3A6ED4),
                       onPressed: () {
                         if (Provider.of<DateSlotsData>(context, listen: false)
+                                .getSelectedTime(widget.selectedDate) ==
+                            0) {
+                          print('There is no time slot to select');
+                        } else if (Provider.of<DateSlotsData>(context,
+                                    listen: false)
                                 .getSelectedTime(widget.selectedDate)
                                 .length <
                             2) {
@@ -81,7 +87,10 @@ class _SelectPickUpScreenState extends State<SelectPickUpScreen> {
                               Provider.of<DateSlotsData>(context, listen: false)
                                   .getSelectedTime(widget.selectedDate));
                           Navigator.pushNamed(context, '/contact',
-                              arguments: widget.selectedDate);
+                              arguments: <String, dynamic>{
+                                'selectedDate': widget.selectedDate,
+                                'address': widget.address
+                              });
                         }
                       })
                 ],

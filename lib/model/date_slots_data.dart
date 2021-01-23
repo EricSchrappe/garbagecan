@@ -65,20 +65,24 @@ class DateSlotsData extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> getSelectedTime(DateTime selectedDate) {
+  dynamic getSelectedTime(DateTime selectedDate) {
     List<String> dateSelectedTime = [
       DateFormat('yyyy-MM-dd').format(selectedDate)
     ];
 
     final List<DateSlots> _selectedDateSlots = _dateSlots[selectedDate];
 
-    for (DateSlots slot in _selectedDateSlots) {
-      if (slot.isSelected) {
-        dateSelectedTime.add(slot.dateText);
+    if (_selectedDateSlots == null) {
+      return 0;
+    } else {
+      for (DateSlots slot in _selectedDateSlots) {
+        if (slot.isSelected) {
+          dateSelectedTime.add(slot.dateText);
+        }
       }
-    }
 
-    notifyListeners();
-    return dateSelectedTime;
+      notifyListeners();
+      return dateSelectedTime;
+    }
   }
 }
