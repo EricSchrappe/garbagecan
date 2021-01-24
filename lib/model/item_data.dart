@@ -26,6 +26,15 @@ class ItemData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void uncheckItems() {
+    for (Item item in _items) {
+      if (item.isChecked == true) {
+        item.toogleCheckbox();
+      }
+    }
+    notifyListeners();
+  }
+
   List<String> getSelectedItems() {
     List<String> selectedItems = [];
 

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class PickupData extends ChangeNotifier {
-  Map<String, Map<String, dynamic>> _pickupData = {};
+  Map<String, List<Map<String, dynamic>>> _pickupData = {};
 
   dynamic get pickupData {
     return _pickupData;
@@ -16,14 +16,28 @@ class PickupData extends ChangeNotifier {
       String date,
       String time,
       List<String> selectedItems}) {
-    _pickupData[uid] = {
-      'email': email,
-      'name': name,
-      'address': address,
-      'phone': phoneNumber,
-      'date': date,
-      'time': time,
-      'items': selectedItems,
-    };
+    if (_pickupData[uid] != null) {
+      _pickupData[uid].add({
+        'email': email,
+        'name': name,
+        'address': address,
+        'phone': phoneNumber,
+        'date': date,
+        'time': time,
+        'items': selectedItems,
+      });
+    } else {
+      _pickupData[uid] = [
+        {
+          'email': email,
+          'name': name,
+          'address': address,
+          'phone': phoneNumber,
+          'date': date,
+          'time': time,
+          'items': selectedItems,
+        }
+      ];
+    }
   }
 }

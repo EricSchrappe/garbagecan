@@ -38,6 +38,11 @@ class _ContactDetailsState extends State<ContactDetails> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Map args = ModalRoute.of(context).settings.arguments;
 
@@ -262,6 +267,12 @@ class _ContactDetailsState extends State<ContactDetails> {
                                         listen: false)
                                     .pickupData
                                     .length);
+                                print(Provider.of<PickupData>(context,
+                                        listen: false)
+                                    .pickupData);
+                                Provider.of<ItemData>(context, listen: false)
+                                    .uncheckItems();
+                                Navigator.pushNamed(context, '/thanks');
                               },
                             ),
                           ],

@@ -1,6 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:garbagecan/components/tiles/pickup_tile_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class MyPickups extends StatelessWidget {
+class MyPickups extends StatefulWidget {
+  @override
+  _MyPickupsState createState() => _MyPickupsState();
+}
+
+class _MyPickupsState extends State<MyPickups> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User loggedInUser;
+
+  void getCurrentUser() {
+    final User user = _auth.currentUser;
+
+    if (user != null) {
+      loggedInUser = user;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,6 +68,14 @@ class MyPickups extends StatelessWidget {
                 style: TextStyle(
                   color: Color(0xFF444444),
                   fontSize: 22.0,
+                ),
+              ),
+              SizedBox(
+                height: 15.0,
+              ),
+              Expanded(
+                child: PickupTileView(
+                  userID: loggedInUser.uid,
                 ),
               ),
             ],

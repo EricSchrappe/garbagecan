@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:garbagecan/model/date_slots_data.dart';
 import 'package:garbagecan/model/item_data.dart';
+import 'package:garbagecan/screens/user/thank_you_screen.dart';
 import 'model/pickup_data.dart';
 import 'package:garbagecan/screens/admin/time_slots_screen.dart';
 import 'package:garbagecan/screens/user/calendar_screen.dart';
@@ -46,6 +47,7 @@ class GarbageCANApp extends StatelessWidget {
         '/calendar': (context) => CalendarScreen(),
         '/contact': (context) => ContactDetails(),
         '/admin': (context) => TimeSlots(),
+        '/thanks': (context) => ThankYouScreen(),
       },
     );
   }
