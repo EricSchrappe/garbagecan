@@ -258,7 +258,8 @@ class _ContactDetailsState extends State<ContactDetails> {
                                   phoneNumber: _phoneController.text,
                                   time: Provider.of<DateSlotsData>(context,
                                           listen: false)
-                                      .getSelectedTime(selectedDate)[1],
+                                      .getSelectedTime(selectedDate)
+                                      .last,
                                   selectedItems: Provider.of<ItemData>(context,
                                           listen: false)
                                       .getSelectedItems(),
@@ -272,6 +273,13 @@ class _ContactDetailsState extends State<ContactDetails> {
                                     .pickupData);
                                 Provider.of<ItemData>(context, listen: false)
                                     .uncheckItems();
+                                Provider.of<DateSlotsData>(context,
+                                        listen: false)
+                                    .blockDateSlot(Provider.of<DateSlotsData>(
+                                            context,
+                                            listen: false)
+                                        .getSelectedTimeSlot(selectedDate)
+                                        .last);
                                 Navigator.pushNamed(context, '/thanks');
                               },
                             ),

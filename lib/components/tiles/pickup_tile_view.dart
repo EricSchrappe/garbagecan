@@ -18,15 +18,15 @@ class PickupTileView extends StatelessWidget {
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
-              final pickup = pData.pickupData[userID][index];
+              final pickup = pData.getActivePickups(userID)[index];
               return PickupTile(
                 dateText: pickup['date'],
-                timeText: pickup['time'],
+                timeText: pickup['time'].dateText,
               );
             },
-            itemCount: pData.pickupData[userID] == null
+            itemCount: pData.getActivePickups(userID) == null
                 ? 0
-                : pData.pickupData[userID].length,
+                : pData.getActivePickups(userID).length,
           );
         },
       ),

@@ -34,6 +34,16 @@ class DateSlotsData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void blockDateSlot(DateSlots slot) {
+    slot.toogleBlocked();
+    notifyListeners();
+  }
+
+  void unblockDateSlot(DateSlots slot) {
+    slot.toogleUnblocked();
+    notifyListeners();
+  }
+
   void addDateSlots(
       {String beginDateString,
       String endDateString,
@@ -66,7 +76,7 @@ class DateSlotsData extends ChangeNotifier {
   }
 
   dynamic getSelectedTime(DateTime selectedDate) {
-    List<String> dateSelectedTime = [
+    List<dynamic> dateSelectedTime = [
       DateFormat('yyyy-MM-dd').format(selectedDate)
     ];
 
@@ -77,12 +87,34 @@ class DateSlotsData extends ChangeNotifier {
     } else {
       for (DateSlots slot in _selectedDateSlots) {
         if (slot.isSelected) {
-          dateSelectedTime.add(slot.dateText);
+          dateSelectedTime.add(slot);
         }
       }
 
       notifyListeners();
       return dateSelectedTime;
     }
+  }
+
+  dynamic getUnblockedDateSlots(DateTime selectedDate) {
+    List<DateSlots> unblockedSlots = [];
+
+    for (var slot in _dateSlots[selectedDate]) {
+      if (slot.isBlocked != true) {
+        unblockedSlots.add(slot);
+      }
+    }
+    return unblockedSlots;
+  }
+
+  dynamic getSelectedTimeSlot(DateTime selectedDate) {
+    List<DateSlots> slots = [];
+
+    for (var slot in _dateSlots[selectedDate]) {
+      if (slot.isSelected) {
+        slots.add(slot);
+      }
+    }
+    return slots;
   }
 }

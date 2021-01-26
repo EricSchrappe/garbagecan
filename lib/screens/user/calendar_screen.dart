@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:garbagecan/model/date_slots_data.dart';
+import 'package:garbagecan/model/pickup_data.dart';
 import 'package:garbagecan/services/location_data.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'select_pickup_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -15,17 +18,28 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   CalendarController _calendarController;
   TextEditingController _textController = TextEditingController();
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  User loggedInUser;
 
   String addressText;
   LocationData location = LocationData();
   DateTime selectedDate;
   bool showSpinner = false;
 
+  void getCurrentUser() {
+    User user = _auth.currentUser;
+
+    if (user != null) {
+      loggedInUser = user;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _calendarController = CalendarController();
     location.getLocation();
+    getCurrentUser();
   }
 
   @override
@@ -59,22 +73,35 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
           backgroundColor: Color(0xFF3A6ED4),
           onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) => SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: SelectPickUpScreen(
-                    selectedDate: selectedDate == null
-                        ? DateTime.parse('9999-01-01')
-                        : selectedDate,
-                    address: addressText,
+            if (Provider.of<PickupData>(context, listen: false)
+                    .getActivePickups(loggedInUser.uid)[0]['date'] ==
+                DateFormat('yyyy-MM-dd').format(selectedDate)) {
+              AwesomeDialog(
+                context: context,
+                dialogType: DialogType.ERROR,
+                title: 'You already scheduled a pickup',
+                desc:
+                    'To give others also the chance to schedule a pickup, you can only create one per day',
+                btnCancelOnPress: () {},
+              )..show();
+            } else {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) => SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: SelectPickUpScreen(
+                      selectedDate: selectedDate == null
+                          ? DateTime.parse('9999-01-01')
+                          : selectedDate,
+                      address: addressText,
+                    ),
                   ),
                 ),
-              ),
-            );
+              );
+            }
           },
         ),
         body: ModalProgressHUD(

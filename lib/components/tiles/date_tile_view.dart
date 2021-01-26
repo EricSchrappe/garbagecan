@@ -18,7 +18,8 @@ class DateListTileView extends StatelessWidget {
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
-              final dateSlot = dateSlotsData.dateSlots[selectedDate][index];
+              final dateSlot =
+                  dateSlotsData.getUnblockedDateSlots(selectedDate)[index];
               return DateTile(
                 dateText: dateSlot.dateText,
                 isSelected: dateSlot.isSelected,
@@ -27,7 +28,7 @@ class DateListTileView extends StatelessWidget {
                 },
               );
             },
-            itemCount: dateSlotsData.dateSlots[selectedDate].length,
+            itemCount: dateSlotsData.getUnblockedDateSlots(selectedDate).length,
           );
         },
       ),
