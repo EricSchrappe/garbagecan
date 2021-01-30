@@ -3,7 +3,7 @@ import 'package:garbagecan/model/date_slots_data.dart';
 import 'package:garbagecan/model/item_data.dart';
 import 'package:garbagecan/screens/user/thank_you_screen.dart';
 import 'model/pickup_data.dart';
-import 'package:garbagecan/screens/admin/time_slots_screen.dart';
+import 'package:garbagecan/screens/admin/time_slots_weekday_screen.dart';
 import 'package:garbagecan/screens/user/calendar_screen.dart';
 import 'package:garbagecan/components/tabBar/user_tabs.dart';
 import 'package:garbagecan/screens/welcome_screen.dart';
@@ -46,7 +46,7 @@ class GarbageCANApp extends StatelessWidget {
         '/userTabs': (context) => UserTabsPage(),
         '/calendar': (context) => CalendarScreen(),
         '/contact': (context) => ContactDetails(),
-        '/admin': (context) => TimeSlots(),
+        '/admin': (context) => TimeSlotsWeekday(),
         '/thanks': (context) => ThankYouScreen(),
       },
     );

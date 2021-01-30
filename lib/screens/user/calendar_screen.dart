@@ -74,16 +74,37 @@ class _CalendarScreenState extends State<CalendarScreen> {
           backgroundColor: Color(0xFF3A6ED4),
           onPressed: () {
             if (Provider.of<PickupData>(context, listen: false)
-                    .getActivePickups(loggedInUser.uid)[0]['date'] ==
-                DateFormat('yyyy-MM-dd').format(selectedDate)) {
-              AwesomeDialog(
-                context: context,
-                dialogType: DialogType.ERROR,
-                title: 'You already scheduled a pickup',
-                desc:
-                    'To give others also the chance to schedule a pickup, you can only create one per day',
-                btnCancelOnPress: () {},
-              )..show();
+                    .getActivePickups(loggedInUser.uid) !=
+                0) {
+              if (Provider.of<PickupData>(context, listen: false)
+                      .getActivePickups(loggedInUser.uid)[0]['date'] ==
+                  DateFormat('yyyy-MM-dd').format(selectedDate)) {
+                AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.ERROR,
+                  title: 'You already scheduled a pickup',
+                  desc:
+                      'To give others also the chance to schedule a pickup, you can only create one per day',
+                  btnCancelOnPress: () {},
+                )..show();
+              } else {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: SelectPickUpScreen(
+                        selectedDate: selectedDate == null
+                            ? DateTime.parse('9999-01-01')
+                            : selectedDate,
+                        address: addressText,
+                      ),
+                    ),
+                  ),
+                );
+              }
             } else {
               showModalBottomSheet(
                 context: context,

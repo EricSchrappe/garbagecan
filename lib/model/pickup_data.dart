@@ -46,14 +46,18 @@ class PickupData extends ChangeNotifier {
     }
   }
 
-  List<Map<String, dynamic>> getActivePickups(String uid) {
+  dynamic getActivePickups(String uid) {
     List<Map<String, dynamic>> activePickup = [];
 
-    for (var pickup in _pickupData[uid]) {
-      if (pickup['deleted'] == false) {
-        activePickup.add(pickup);
+    if (_pickupData[uid] == null) {
+      return 0;
+    } else {
+      for (var pickup in _pickupData[uid]) {
+        if (pickup['deleted'] == false) {
+          activePickup.add(pickup);
+        }
       }
+      return activePickup;
     }
-    return activePickup;
   }
 }

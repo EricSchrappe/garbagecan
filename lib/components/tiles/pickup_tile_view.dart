@@ -24,7 +24,7 @@ class PickupTileView extends StatelessWidget {
                 timeText: pickup['time'].dateText,
               );
             },
-            itemCount: pData.getActivePickups(userID) == null
+            itemCount: pData.getActivePickups(userID) == 0
                 ? 0
                 : pData.getActivePickups(userID).length,
           );

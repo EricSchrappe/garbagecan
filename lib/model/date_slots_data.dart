@@ -75,6 +75,58 @@ class DateSlotsData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addDateSlotsWeekday(
+      {int weekday,
+      int dayNumber,
+      String startTimeString,
+      String endTimeString}) {
+    DateTime startTime = DateFormat.Hm().parse(startTimeString);
+    DateTime endTime = DateFormat.Hm().parse(endTimeString);
+
+    List<DateTime> weekdays = getWeekdays(weekday, dayNumber);
+    for (var wday in weekdays) {
+      List<DateSlots> dateSlots = [];
+
+      for (var j = 0;
+          j <= endTime.difference(startTime).inMinutes;
+          j = j + 30) {
+        dateSlots.add(DateSlots(
+            dateText: DateFormat.Hm().format(DateTime(
+                startTime.year,
+                startTime.month,
+                startTime.day,
+                startTime.hour,
+                startTime.minute + j))));
+      }
+      _dateSlots[DateTime.parse(DateFormat('yyyy-MM-dd').format(wday))] =
+          dateSlots;
+    }
+    notifyListeners();
+  }
+
+  List<DateTime> getWeekdays(int weekday, int dayNumber) {
+    List<DateTime> dates = [];
+
+    int wday = weekday;
+    DateTime now = DateTime.now();
+    for (var i = 1; i <= dayNumber; i++) {
+      if (now.weekday != wday) {
+        while (now.weekday != wday) {
+          now = now.add(
+            Duration(days: 1),
+          );
+        }
+        dates.add(now);
+      } else if (now.weekday == wday) {
+        now = now.add(
+          Duration(days: 1),
+        );
+        i--;
+      }
+    }
+    return dates;
+  }
+
   dynamic getSelectedTime(DateTime selectedDate) {
     List<dynamic> dateSelectedTime = [
       DateFormat('yyyy-MM-dd').format(selectedDate)
