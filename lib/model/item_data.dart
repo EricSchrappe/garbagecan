@@ -1,24 +1,26 @@
-import 'package:garbagecan/model/item.dart';
 import 'dart:collection';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:garbagecan/model/item.dart';
 
 class ItemData extends ChangeNotifier {
-  List<Item> _items = [
-    Item(name: 'Paper'),
-    Item(name: 'Cardboard Box'),
-    Item(name: 'Cardboard Packet'),
-    Item(name: 'Newspaper (Urdu)'),
-    Item(name: 'Newspaper (English'),
-    Item(name: 'Aluminum Can'),
-    Item(name: 'Copper'),
-    Item(name: 'Tin'),
-    Item(name: 'Iron'),
-    Item(name: 'Plastic Bottles (PET)'),
-    Item(name: 'Plastic (Other)')
-  ];
+  List<Item> _items = [];
 
-  UnmodifiableListView get items {
-    return UnmodifiableListView(_items);
+  ItemData() {
+    // Listen to changes
+    FirebaseFirestore.instance
+        .collection('trashItems')
+        .snapshots()
+        .listen((snapshot) {
+      print('${snapshot.docs.length}');
+      _items = snapshot.docs.map((doc) => Item(doc.id, doc.data())).toList();
+      notifyListeners();
+    });
+  }
+
+  UnmodifiableListView<Item> get items {
+    return UnmodifiableListView<Item>(_items);
   }
 
   void updateCheckbox(Item item) {
@@ -35,14 +37,5 @@ class ItemData extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> getSelectedItems() {
-    List<String> selectedItems = [];
-
-    for (Item item in _items) {
-      if (item.isChecked) {
-        selectedItems.add(item.name);
-      }
-    }
-    return selectedItems;
-  }
+  List<Item> getSelectedItems() => _items.where((i) => i.isChecked).toList();
 }

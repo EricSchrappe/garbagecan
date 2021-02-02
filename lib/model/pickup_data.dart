@@ -1,59 +1,107 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:garbagecan/model/date_slots.dart';
+import 'package:garbagecan/api.dart';
+import 'package:garbagecan/model/item.dart';
+
+class Pickup {
+  String id;
+  String uid;
+  String email;
+  String name;
+  String address;
+  String phoneNumber;
+  DateTime time;
+  List<Item> items;
+  GeoPoint gps;
+  bool deleted = false;
+
+  Pickup({
+    @required this.id,
+    @required this.uid,
+    @required this.email,
+    @required this.name,
+    @required this.address,
+    @required this.phoneNumber,
+    @required this.time,
+    @required this.items,
+    this.deleted = false,
+  });
+
+  Pickup.fromDocument(this.id, Map<String, dynamic> data, [this.items])
+      : uid = data['uid'],
+        email = data['email'],
+        name = data['name'],
+        address = data['address'],
+        phoneNumber = data['phoneNumber'],
+        time = data['time'].toDate(),
+        gps = data['gps'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'email': email,
+      'name': name,
+      'address': address,
+      'phoneNumber': phoneNumber,
+      'time': time.toIso8601String(),
+      'trashItems': items.map((i) => i.toJson()).toList(),
+      'gps': gps.toString(),
+    };
+  }
+}
 
 class PickupData extends ChangeNotifier {
-  Map<String, List<Map<String, dynamic>>> _pickupData = {};
+  Map<String, List<Pickup>> _pickups = {};
 
-  dynamic get pickupData {
-    return _pickupData;
+  Map<String, List<Pickup>> get pickupData {
+    return _pickups;
   }
 
-  void addPickup({
-    String uid,
-    String email,
-    String name,
-    String address,
-    String phoneNumber,
-    String date,
-    DateSlots time,
-    List<String> selectedItems,
-    bool deleted = false,
-  }) {
-    if (_pickupData[uid] != null) {
-      _pickupData[uid].add({
-        'email': email,
-        'name': name,
-        'address': address,
-        'phone': phoneNumber,
-        'date': date,
-        'time': time,
-        'items': selectedItems,
-        'deleted': deleted,
-      });
-    } else {
-      _pickupData[uid] = [
-        {
-          'email': email,
-          'name': name,
-          'address': address,
-          'phone': phoneNumber,
-          'date': date,
-          'time': time,
-          'items': selectedItems,
-          'deleted': deleted,
+  PickupData() {
+    // Listen to changes
+    FirebaseFirestore.instance
+        .collection('pickups')
+        .snapshots()
+        .listen((snapshot) async {
+      _pickups.clear();
+      for (final doc in snapshot.docs) {
+        List<Item> items = [];
+        if (doc.data().containsKey('trashItems')) {
+          final trashItems = List<DocumentReference>.from(doc['trashItems']);
+          items = await Future.wait(trashItems.map(
+            (DocumentReference r) async => Item(r.id, (await r.get()).data()),
+          ));
         }
-      ];
+
+        final pickup = Pickup.fromDocument(doc.id, doc.data(), items);
+
+        if (_pickups.containsKey(doc['uid']))
+          _pickups[doc['uid']].add(pickup);
+        else
+          _pickups[doc['uid']] = [pickup];
+      }
+      notifyListeners();
+    });
+  }
+
+  void addPickup(Pickup pickup) {
+    requestPickup(pickup);
+    // TODO: this should be removed when pickup requests work on the server
+    if (_pickups[pickup.uid] != null) {
+      _pickups[pickup.uid].add(pickup);
+    } else {
+      _pickups[pickup.uid] = [pickup];
     }
   }
 
-  dynamic getActivePickups(String uid) {
-    List<Map<String, dynamic>> activePickup = [];
+  List<Pickup> getActivePickups(String uid) {
+    List<Pickup> activePickup = [];
 
-    if (_pickupData[uid] == null) {
-      return 0;
+    if (_pickups[uid] == null) {
+      return null;
     } else {
-      for (var pickup in _pickupData[uid]) {
-        if (pickup['deleted'] == false) {
+      for (var pickup in _pickups[uid]) {
+        if (!pickup.deleted) {
           activePickup.add(pickup);
         }
       }

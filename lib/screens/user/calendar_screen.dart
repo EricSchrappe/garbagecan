@@ -1,14 +1,15 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garbagecan/model/date_slots_data.dart';
 import 'package:garbagecan/model/pickup_data.dart';
 import 'package:garbagecan/services/location_data.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'select_pickup_screen.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+import 'select_pickup_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   @override
@@ -48,6 +49,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
     super.dispose();
   }
 
+  bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -75,10 +79,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
           onPressed: () {
             if (Provider.of<PickupData>(context, listen: false)
                     .getActivePickups(loggedInUser.uid) !=
-                0) {
-              if (Provider.of<PickupData>(context, listen: false)
-                      .getActivePickups(loggedInUser.uid)[0]['date'] ==
-                  DateFormat('yyyy-MM-dd').format(selectedDate)) {
+                null) {
+              if (_isSameDay(
+                Provider.of<PickupData>(context, listen: false)
+                    .getActivePickups(loggedInUser.uid)[0]
+                    .time,
+                selectedDate,
+              )) {
                 AwesomeDialog(
                   context: context,
                   dialogType: DialogType.ERROR,

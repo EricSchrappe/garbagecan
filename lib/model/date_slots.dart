@@ -1,19 +1,24 @@
-class DateSlots {
-  final String dateText;
+class TimeSlot {
+  final int hour;
+  final int minute;
   bool isSelected;
   bool isBlocked;
 
-  DateSlots({this.dateText, this.isSelected = false, this.isBlocked = false});
+  TimeSlot(
+    this.hour, [
+    this.minute = 0,
+  ])  : isSelected = false,
+        isBlocked = false;
 
-  void toogleSelected() {
+  void toggleSelected() {
     isSelected = !isSelected;
   }
 
-  void toogleBlocked() {
+  void toggleBlocked() {
     isBlocked = true;
   }
 
-  void toogleUnblocked() {
+  void toggleUnblocked() {
     isBlocked = false;
   }
 }

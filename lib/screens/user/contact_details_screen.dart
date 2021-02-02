@@ -1,10 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:garbagecan/components/tiles/item_tile_view.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:garbagecan/model/date_slots_data.dart';
-import 'package:garbagecan/model/pickup_data.dart';
 import 'package:garbagecan/model/item_data.dart';
+import 'package:garbagecan/model/pickup_data.dart';
 import 'package:provider/provider.dart';
 
 class ContactDetails extends StatefulWidget {
@@ -247,23 +247,19 @@ class _ContactDetailsState extends State<ContactDetails> {
                               ),
                               onPressed: () {
                                 Provider.of<PickupData>(context, listen: false)
-                                    .addPickup(
+                                    .addPickup(Pickup(
                                   uid: loggedInUser.uid,
-                                  date: Provider.of<DateSlotsData>(context,
-                                          listen: false)
-                                      .getSelectedTime(selectedDate)[0],
                                   address: address,
                                   email: _emailController.text,
                                   name: _nameController.text,
                                   phoneNumber: _phoneController.text,
                                   time: Provider.of<DateSlotsData>(context,
                                           listen: false)
-                                      .getSelectedTime(selectedDate)
-                                      .last,
-                                  selectedItems: Provider.of<ItemData>(context,
+                                      .getSelectedTime(selectedDate),
+                                  items: Provider.of<ItemData>(context,
                                           listen: false)
                                       .getSelectedItems(),
-                                );
+                                ));
                                 print(Provider.of<PickupData>(context,
                                         listen: false)
                                     .pickupData
