@@ -74,13 +74,7 @@ class _SelectPickUpScreenState extends State<SelectPickUpScreen> {
                       onPressed: () {
                         if (Provider.of<DateSlotsData>(context, listen: false)
                                 .getSelectedTime(widget.selectedDate) ==
-                            0) {
-                          print('There is no time slot to select');
-                        } else if (Provider.of<DateSlotsData>(context,
-                                    listen: false)
-                                .getSelectedTime(widget.selectedDate)
-                                .length <
-                            2) {
+                            null) {
                           print('No Time Slot was selected');
                         } else {
                           print(

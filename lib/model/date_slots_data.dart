@@ -1,46 +1,44 @@
-import 'package:garbagecan/model/date_slots.dart';
 import 'package:flutter/foundation.dart';
+import 'package:garbagecan/model/date_slots.dart';
 import 'package:intl/intl.dart';
 
 class DateSlotsData extends ChangeNotifier {
   // TODO: Update to data from API
-  Map<DateTime, List<DateSlots>> _dateSlots = {
-    DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime(2021, 1, 9))): [
-      DateSlots(dateText: '07:00'),
-      DateSlots(dateText: '07:30'),
-      DateSlots(dateText: '08:00'),
-      DateSlots(dateText: '08:30'),
-      DateSlots(dateText: '09:00'),
-      DateSlots(dateText: '09:00'),
-      DateSlots(dateText: '09:00'),
-      DateSlots(dateText: '09:00'),
-      DateSlots(dateText: '09:00'),
+  Map<DateTime, List<TimeSlot>> _dateSlots = {
+    DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime(2021, 2, 9))): [
+      TimeSlot(7),
+      TimeSlot(7, 30),
+      TimeSlot(8),
+      TimeSlot(8, 30),
+      TimeSlot(9),
+      TimeSlot(9, 30),
+      TimeSlot(10),
     ],
-    DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime(2021, 1, 15))): [
-      DateSlots(dateText: '07:00'),
-      DateSlots(dateText: '07:30'),
-      DateSlots(dateText: '08:00'),
-      DateSlots(dateText: '08:30'),
-      DateSlots(dateText: '09:00'),
+    DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime(2021, 2, 15))): [
+      TimeSlot(7),
+      TimeSlot(7, 30),
+      TimeSlot(8),
+      TimeSlot(8, 30),
+      TimeSlot(9),
     ]
   };
 
-  dynamic get dateSlots {
+  Map<DateTime, List<TimeSlot>> get dateSlots {
     return _dateSlots;
   }
 
-  void selectDateSlot(DateSlots slot) {
-    slot.toogleSelected();
+  void selectDateSlot(TimeSlot slot) {
+    slot.toggleSelected();
     notifyListeners();
   }
 
-  void blockDateSlot(DateSlots slot) {
-    slot.toogleBlocked();
+  void blockDateSlot(TimeSlot slot) {
+    slot.toggleBlocked();
     notifyListeners();
   }
 
-  void unblockDateSlot(DateSlots slot) {
-    slot.toogleUnblocked();
+  void unblockDateSlot(TimeSlot slot) {
+    slot.toggleUnblocked();
     notifyListeners();
   }
 
@@ -55,18 +53,15 @@ class DateSlotsData extends ChangeNotifier {
     DateTime endTime = DateFormat.Hm().parse(endTimeString);
 
     for (var i = 0; i <= endDate.difference(beginDate).inDays; i++) {
-      List<DateSlots> dateSlots = [];
+      List<TimeSlot> dateSlots = [];
 
       for (var j = 0;
           j <= endTime.difference(startTime).inMinutes;
           j = j + 30) {
-        dateSlots.add(DateSlots(
-            dateText: DateFormat.Hm().format(DateTime(
-                startTime.year,
-                startTime.month,
-                startTime.day,
-                startTime.hour,
-                startTime.minute + j))));
+        dateSlots.add(TimeSlot(
+          startTime.hour,
+          startTime.minute + j,
+        ));
       }
 
       _dateSlots[DateTime(beginDate.year, beginDate.month, beginDate.day + i)] =
@@ -85,18 +80,15 @@ class DateSlotsData extends ChangeNotifier {
 
     List<DateTime> weekdays = getWeekdays(weekday, dayNumber);
     for (var wday in weekdays) {
-      List<DateSlots> dateSlots = [];
+      List<TimeSlot> dateSlots = [];
 
       for (var j = 0;
           j <= endTime.difference(startTime).inMinutes;
           j = j + 30) {
-        dateSlots.add(DateSlots(
-            dateText: DateFormat.Hm().format(DateTime(
-                startTime.year,
-                startTime.month,
-                startTime.day,
-                startTime.hour,
-                startTime.minute + j))));
+        dateSlots.add(TimeSlot(
+          startTime.hour,
+          startTime.minute + j,
+        ));
       }
       _dateSlots[DateTime.parse(DateFormat('yyyy-MM-dd').format(wday))] =
           dateSlots;
@@ -127,46 +119,30 @@ class DateSlotsData extends ChangeNotifier {
     return dates;
   }
 
-  dynamic getSelectedTime(DateTime selectedDate) {
-    List<dynamic> dateSelectedTime = [
-      DateFormat('yyyy-MM-dd').format(selectedDate)
-    ];
+  DateTime getSelectedTime(DateTime selectedDate) {
+    final List<TimeSlot> _selectedDateSlots = _dateSlots[selectedDate];
 
-    final List<DateSlots> _selectedDateSlots = _dateSlots[selectedDate];
-
-    if (_selectedDateSlots == null) {
-      return 0;
+    if (_selectedDateSlots == null || _selectedDateSlots.length == 0) {
+      return null;
     } else {
-      for (DateSlots slot in _selectedDateSlots) {
+      for (TimeSlot slot in _selectedDateSlots)
         if (slot.isSelected) {
-          dateSelectedTime.add(slot);
+          notifyListeners();
+          return DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            slot.hour,
+            slot.minute,
+          );
         }
-      }
-
-      notifyListeners();
-      return dateSelectedTime;
+      return null;
     }
   }
 
-  dynamic getUnblockedDateSlots(DateTime selectedDate) {
-    List<DateSlots> unblockedSlots = [];
+  List<TimeSlot> getUnblockedDateSlots(DateTime selectedDate) =>
+      _dateSlots[selectedDate].where((s) => !s.isBlocked).toList();
 
-    for (var slot in _dateSlots[selectedDate]) {
-      if (slot.isBlocked != true) {
-        unblockedSlots.add(slot);
-      }
-    }
-    return unblockedSlots;
-  }
-
-  dynamic getSelectedTimeSlot(DateTime selectedDate) {
-    List<DateSlots> slots = [];
-
-    for (var slot in _dateSlots[selectedDate]) {
-      if (slot.isSelected) {
-        slots.add(slot);
-      }
-    }
-    return slots;
-  }
+  List<TimeSlot> getSelectedTimeSlot(DateTime selectedDate) =>
+      _dateSlots[selectedDate].where((s) => s.isSelected).toList();
 }
