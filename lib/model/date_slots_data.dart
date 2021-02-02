@@ -78,6 +78,7 @@ class DateSlotsData extends ChangeNotifier {
   void addDateSlotsWeekday(
       {int weekday,
       int dayNumber,
+      int timeRange,
       String startTimeString,
       String endTimeString}) {
     DateTime startTime = DateFormat.Hm().parse(startTimeString);
@@ -89,7 +90,7 @@ class DateSlotsData extends ChangeNotifier {
 
       for (var j = 0;
           j <= endTime.difference(startTime).inMinutes;
-          j = j + 30) {
+          j = j + timeRange) {
         dateSlots.add(DateSlots(
             dateText: DateFormat.Hm().format(DateTime(
                 startTime.year,

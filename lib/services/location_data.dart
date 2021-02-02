@@ -21,4 +21,9 @@ class LocationData {
     print(addresses[0].addressLine);
     return addresses[0].addressLine;
   }
+
+  Future<Coordinates> getCoordinatesFromAddress(String query) async {
+    var addresses = await Geocoder.local.findAddressesFromQuery(query);
+    return addresses.first.coordinates;
+  }
 }

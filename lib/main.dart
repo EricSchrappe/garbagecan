@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:garbagecan/model/date_slots_data.dart';
 import 'package:garbagecan/model/item_data.dart';
+import 'package:garbagecan/screens/admin/headquarters_screen.dart';
+import 'package:garbagecan/screens/admin/pickup_overview_screen.dart';
+import 'package:garbagecan/screens/admin/time_slots_weekday_screen.dart';
+import 'package:garbagecan/screens/admin/trash_items_screen.dart';
 import 'package:garbagecan/screens/user/thank_you_screen.dart';
 import 'model/pickup_data.dart';
-import 'package:garbagecan/screens/admin/time_slots_weekday_screen.dart';
+import 'screens/admin/welcome_admin_screen.dart';
 import 'package:garbagecan/screens/user/calendar_screen.dart';
 import 'package:garbagecan/components/tabBar/user_tabs.dart';
 import 'package:garbagecan/screens/welcome_screen.dart';
@@ -46,8 +50,12 @@ class GarbageCANApp extends StatelessWidget {
         '/userTabs': (context) => UserTabsPage(),
         '/calendar': (context) => CalendarScreen(),
         '/contact': (context) => ContactDetails(),
-        '/admin': (context) => TimeSlotsWeekday(),
+        '/admin': (context) => WelcomeAdminScreen(),
         '/thanks': (context) => ThankYouScreen(),
+        '/timeslots': (context) => TimeSlotsWeekday(),
+        '/headquarters': (context) => HeadquarterScreen(),
+        '/trash': (context) => TrashItemsScreen(),
+        '/allpickups': (context) => PickupOverviewScreen(),
       },
     );
   }

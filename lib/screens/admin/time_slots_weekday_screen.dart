@@ -10,9 +10,11 @@ class TimeSlotsWeekday extends StatefulWidget {
 
 class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
   TextEditingController _controllerWeekday = TextEditingController();
+  TextEditingController _controllerTimeRange = TextEditingController();
   TextEditingController _controllerStartTime = TextEditingController();
   TextEditingController _controllerEndTime = TextEditingController();
-  double _currentSliderValue = 30;
+  double _currentSliderValueWeekdays = 30;
+  double _currentSliderValueTime = 90;
   int weekday = 1;
   List<bool> isSelected = [true, false, false, false, false, false, false];
 
@@ -128,7 +130,7 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
                       textAlign: TextAlign.center,
                       readOnly: true,
                       controller: _controllerWeekday
-                        ..text = _currentSliderValue.round().toString(),
+                        ..text = _currentSliderValueWeekdays.round().toString(),
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Color(0xFFF6F6F6),
@@ -147,15 +149,15 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
                       ),
                     ),
                     Slider(
-                      value: _currentSliderValue,
+                      value: _currentSliderValueWeekdays,
                       min: 0,
                       max: 120,
                       divisions: 4,
-                      label: _currentSliderValue.round().toString(),
+                      label: _currentSliderValueWeekdays.round().toString(),
                       activeColor: Color(0xFF3A6ED4),
                       onChanged: (double value) {
                         setState(() {
-                          _currentSliderValue = value;
+                          _currentSliderValueWeekdays = value;
                           _controllerWeekday.text = value.round().toString();
                         });
                       },
@@ -192,8 +194,57 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
                         ),
                       ],
                     ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                      'Select the time range for the slots (min)',
+                      style: TextStyle(
+                        color: Color(0xFF444444),
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    TextField(
+                      textAlign: TextAlign.center,
+                      readOnly: true,
+                      controller: _controllerTimeRange
+                        ..text = _currentSliderValueTime.round().toString(),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Color(0xFFF6F6F6),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF3A6ED4),
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF3A6ED4),
+                          ),
+                        ),
+                        isDense: true,
+                        contentPadding: EdgeInsets.all(8.0),
+                      ),
+                    ),
+                    Slider(
+                      value: _currentSliderValueTime,
+                      min: 0,
+                      max: 210,
+                      divisions: 7,
+                      label: _currentSliderValueTime.round().toString(),
+                      activeColor: Color(0xFF3A6ED4),
+                      onChanged: (double value) {
+                        setState(() {
+                          _currentSliderValueTime = value;
+                          _controllerTimeRange.text = value.round().toString();
+                        });
+                      },
+                    ),
                     Padding(
-                      padding: EdgeInsets.only(top: 50.0, bottom: 15.0),
+                      padding: EdgeInsets.only(top: 20.0, bottom: 15.0),
                       child: SizedBox(
                         width: double.infinity,
                         child: RaisedButton(
@@ -209,7 +260,9 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
                             Provider.of<DateSlotsData>(context, listen: false)
                                 .addDateSlotsWeekday(
                                     weekday: weekday,
-                                    dayNumber: _currentSliderValue.round(),
+                                    dayNumber:
+                                        _currentSliderValueWeekdays.round(),
+                                    timeRange: _currentSliderValueTime.round(),
                                     startTimeString: _controllerStartTime.text,
                                     endTimeString: _controllerEndTime.text);
                           },
