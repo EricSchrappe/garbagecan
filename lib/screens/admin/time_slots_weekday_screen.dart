@@ -265,6 +265,7 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
                                     timeRange: _currentSliderValueTime.round(),
                                     startTimeString: _controllerStartTime.text,
                                     endTimeString: _controllerEndTime.text);
+                            Navigator.pop(context);
                           },
                         ),
                       ),

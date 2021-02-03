@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 class TrashItemsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Map<String, int> trashNewValues = {};
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -75,6 +76,7 @@ class TrashItemsScreen extends StatelessWidget {
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               final item = itemData.items[index];
+
                               return ListTile(
                                 title: Text(
                                   item.name,
@@ -120,6 +122,10 @@ class TrashItemsScreen extends StatelessWidget {
                                             isDense: true,
                                             contentPadding: EdgeInsets.all(8.0),
                                           ),
+                                          onSubmitted: (value) {
+                                            trashNewValues['${item.id}'] =
+                                                int.parse(value);
+                                          },
                                         ),
                                       ),
                                       Expanded(
@@ -149,7 +155,11 @@ class TrashItemsScreen extends StatelessWidget {
                           'Adjust items',
                           style: TextStyle(color: Colors.white, fontSize: 24.0),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Provider.of<ItemData>(context, listen: false)
+                              .updateTrashItemValues(trashNewValues);
+                          Navigator.pop(context);
+                        },
                       ),
                     )
                   ],
