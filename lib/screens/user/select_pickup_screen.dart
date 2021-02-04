@@ -37,8 +37,8 @@ class _SelectPickUpScreenState extends State<SelectPickUpScreen> {
               height: 10.0,
             ),
             Provider.of<DateSlotsData>(context, listen: false)
-                        .dateSlots[widget.selectedDate] ==
-                    null
+                    .getUnblockedDateSlots(widget.selectedDate)
+                    .isEmpty
                 ? Text(
                     'No time slots available right now',
                     style: TextStyle(color: Color(0xFF444444), fontSize: 18.0),

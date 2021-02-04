@@ -246,16 +246,19 @@ class _ContactDetailsState extends State<ContactDetails> {
                                     color: Colors.white, fontSize: 24.0),
                               ),
                               onPressed: () {
+                                final timeSlot = Provider.of<DateSlotsData>(
+                                        context,
+                                        listen: false)
+                                    .getSelectedTime(selectedDate);
                                 Provider.of<PickupData>(context, listen: false)
                                     .addPickup(Pickup(
+                                  id: timeSlot.id,
                                   uid: loggedInUser.uid,
                                   address: address,
                                   email: _emailController.text,
                                   name: _nameController.text,
                                   phoneNumber: _phoneController.text,
-                                  time: Provider.of<DateSlotsData>(context,
-                                          listen: false)
-                                      .getSelectedTime(selectedDate),
+                                  time: timeSlot,
                                   items: Provider.of<ItemData>(context,
                                           listen: false)
                                       .getSelectedItems(),
@@ -269,13 +272,6 @@ class _ContactDetailsState extends State<ContactDetails> {
                                     .pickupData);
                                 Provider.of<ItemData>(context, listen: false)
                                     .uncheckItems();
-                                Provider.of<DateSlotsData>(context,
-                                        listen: false)
-                                    .blockDateSlot(Provider.of<DateSlotsData>(
-                                            context,
-                                            listen: false)
-                                        .getSelectedTimeSlot(selectedDate)
-                                        .last);
                                 Navigator.pushNamed(context, '/thanks');
                               },
                             ),

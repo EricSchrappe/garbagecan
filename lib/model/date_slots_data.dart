@@ -1,30 +1,40 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:garbagecan/model/date_slots.dart';
 import 'package:intl/intl.dart';
 
 class DateSlotsData extends ChangeNotifier {
   // TODO: Update to data from API
-  Map<DateTime, List<TimeSlot>> _dateSlots = {
-    DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime(2021, 2, 9))): [
-      TimeSlot(7),
-      TimeSlot(7, 30),
-      TimeSlot(8),
-      TimeSlot(8, 30),
-      TimeSlot(9),
-      TimeSlot(9, 30),
-      TimeSlot(10),
-    ],
-    DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime(2021, 2, 15))): [
-      TimeSlot(7),
-      TimeSlot(7, 30),
-      TimeSlot(8),
-      TimeSlot(8, 30),
-      TimeSlot(9),
-    ]
-  };
+  List<TimeSlot> timeSlots = [];
 
-  Map<DateTime, List<TimeSlot>> get dateSlots {
-    return _dateSlots;
+  DateSlotsData() {
+    // Listen to changes
+    FirebaseFirestore.instance
+        .collection('pickups')
+        .where('taken')
+        .snapshots()
+        .listen((snapshot) {
+      timeSlots = snapshot.docs.map((doc) {
+        final datetime = doc['time'].toDate();
+        return TimeSlot(doc.id, datetime, isBlocked: doc['taken']);
+      }).toList();
+      timeSlots.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+
+      notifyListeners();
+    });
+  }
+
+  Map<DateTime, List<TimeSlot>> events() {
+    final Map<DateTime, List<TimeSlot>> events = {};
+    for (final slot in timeSlots) {
+      if (slot.isBlocked) continue;
+      if (events.containsKey(slot.date))
+        events[slot.date].add(slot);
+      else
+        events[slot.date] = [slot];
+    }
+
+    return events;
   }
 
   void selectDateSlot(TimeSlot slot) {
@@ -32,17 +42,7 @@ class DateSlotsData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void blockDateSlot(TimeSlot slot) {
-    slot.toggleBlocked();
-    notifyListeners();
-  }
-
-  void unblockDateSlot(TimeSlot slot) {
-    slot.toggleUnblocked();
-    notifyListeners();
-  }
-
-  void addDateSlots(
+  Future<void> addDateSlots(
       {String beginDateString,
       String endDateString,
       String startTimeString,
@@ -52,25 +52,35 @@ class DateSlotsData extends ChangeNotifier {
     DateTime startTime = DateFormat.Hm().parse(startTimeString);
     DateTime endTime = DateFormat.Hm().parse(endTimeString);
 
-    for (var i = 0; i <= endDate.difference(beginDate).inDays; i++) {
-      List<TimeSlot> dateSlots = [];
+    final minutesDuration = 30;
 
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (var i = 0; i <= endDate.difference(beginDate).inDays; i++) {
       for (var j = 0;
           j <= endTime.difference(startTime).inMinutes;
-          j = j + 30) {
-        dateSlots.add(TimeSlot(
-          startTime.hour,
-          startTime.minute + j,
-        ));
+          j = j + minutesDuration) {
+        batch.set(
+          FirebaseFirestore.instance.collection('pickups').doc(),
+          {
+            'taken': false,
+            'time_range': minutesDuration * 60000,
+            'time': DateTime(
+              beginDate.year,
+              beginDate.month,
+              beginDate.day + i,
+              startTime.hour,
+              startTime.minute + j,
+            ),
+          },
+        );
       }
-
-      _dateSlots[DateTime(beginDate.year, beginDate.month, beginDate.day + i)] =
-          dateSlots;
     }
-    notifyListeners();
+
+    return batch.commit();
   }
 
-  void addDateSlotsWeekday(
+  Future<void> addDateSlotsWeekday(
       {int weekday,
       int dayNumber,
       int timeRange,
@@ -79,22 +89,31 @@ class DateSlotsData extends ChangeNotifier {
     DateTime startTime = DateFormat.Hm().parse(startTimeString);
     DateTime endTime = DateFormat.Hm().parse(endTimeString);
 
+    final batch = FirebaseFirestore.instance.batch();
+
     List<DateTime> weekdays = getWeekdays(weekday, dayNumber);
     for (var wday in weekdays) {
-      List<TimeSlot> dateSlots = [];
-
       for (var j = 0;
           j <= endTime.difference(startTime).inMinutes;
           j = j + timeRange) {
-        dateSlots.add(TimeSlot(
-          startTime.hour,
-          startTime.minute + j,
-        ));
+        batch.set(
+          FirebaseFirestore.instance.collection('pickups').doc(),
+          {
+            'taken': false,
+            'time_range': timeRange * 60000,
+            'time': DateTime(
+              wday.year,
+              wday.month,
+              wday.day,
+              startTime.hour,
+              startTime.minute + j,
+            ),
+          },
+        );
       }
-      _dateSlots[DateTime.parse(DateFormat('yyyy-MM-dd').format(wday))] =
-          dateSlots;
     }
-    notifyListeners();
+
+    return batch.commit();
   }
 
   List<DateTime> getWeekdays(int weekday, int dayNumber) {
@@ -120,30 +139,30 @@ class DateSlotsData extends ChangeNotifier {
     return dates;
   }
 
-  DateTime getSelectedTime(DateTime selectedDate) {
-    final List<TimeSlot> _selectedDateSlots = _dateSlots[selectedDate];
+  TimeSlot getSelectedTime(DateTime selectedDate) {
+    final List<TimeSlot> _selectedDateSlots =
+        getSelectedTimeSlots(selectedDate);
 
     if (_selectedDateSlots == null || _selectedDateSlots.length == 0) {
       return null;
     } else {
-      for (TimeSlot slot in _selectedDateSlots)
-        if (slot.isSelected) {
-          notifyListeners();
-          return DateTime(
-            selectedDate.year,
-            selectedDate.month,
-            selectedDate.day,
-            slot.hour,
-            slot.minute,
-          );
-        }
-      return null;
+      return _selectedDateSlots[0];
     }
   }
 
-  List<TimeSlot> getUnblockedDateSlots(DateTime selectedDate) =>
-      _dateSlots[selectedDate].where((s) => !s.isBlocked).toList();
+  List<TimeSlot> getUnblockedDateSlots(DateTime selectedDate) => timeSlots
+      .where((s) =>
+          !s.isBlocked &&
+          s.dateTime.year == selectedDate.year &&
+          s.dateTime.month == selectedDate.month &&
+          s.dateTime.day == selectedDate.day)
+      .toList();
 
-  List<TimeSlot> getSelectedTimeSlot(DateTime selectedDate) =>
-      _dateSlots[selectedDate].where((s) => s.isSelected).toList();
+  List<TimeSlot> getSelectedTimeSlots(DateTime selectedDate) => timeSlots
+      .where((s) =>
+          s.isSelected &&
+          s.dateTime.year == selectedDate.year &&
+          s.dateTime.month == selectedDate.month &&
+          s.dateTime.day == selectedDate.day)
+      .toList();
 }

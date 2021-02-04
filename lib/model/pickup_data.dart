@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:garbagecan/api.dart';
+import 'package:garbagecan/model/date_slots.dart';
 import 'package:garbagecan/model/item.dart';
 
 class Pickup {
@@ -10,7 +11,7 @@ class Pickup {
   String name;
   String address;
   String phoneNumber;
-  DateTime time;
+  TimeSlot time;
   List<Item> items;
   GeoPoint gps;
   bool deleted = false;
@@ -33,17 +34,18 @@ class Pickup {
         name = data['name'],
         address = data['address'],
         phoneNumber = data['phoneNumber'],
-        time = data['time'].toDate(),
+        time = TimeSlot(id, data['time'].toDate()),
         gps = data['gps'];
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'uid': uid,
       'email': email,
       'name': name,
       'address': address,
       'phoneNumber': phoneNumber,
-      'time': time.toIso8601String(),
+      'time': time.dateTime.toIso8601String(),
       'trashItems': items.map((i) => i.toJson()).toList(),
       'gps': gps.toString(),
     };
@@ -61,6 +63,7 @@ class PickupData extends ChangeNotifier {
     // Listen to changes
     FirebaseFirestore.instance
         .collection('pickups')
+        .where('taken', isEqualTo: true)
         .snapshots()
         .listen((snapshot) async {
       _pickups.clear();

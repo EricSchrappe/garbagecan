@@ -256,8 +256,9 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
                             style:
                                 TextStyle(color: Colors.white, fontSize: 24.0),
                           ),
-                          onPressed: () {
-                            Provider.of<DateSlotsData>(context, listen: false)
+                          onPressed: () async {
+                            await Provider.of<DateSlotsData>(context,
+                                    listen: false)
                                 .addDateSlotsWeekday(
                                     weekday: weekday,
                                     dayNumber:

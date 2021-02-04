@@ -147,13 +147,15 @@ class _TimeSlotsState extends State<TimeSlots> {
                             style:
                                 TextStyle(color: Colors.white, fontSize: 24.0),
                           ),
-                          onPressed: () {
-                            Provider.of<DateSlotsData>(context, listen: false)
+                          onPressed: () async {
+                            await Provider.of<DateSlotsData>(context,
+                                    listen: false)
                                 .addDateSlots(
                                     beginDateString: _controllerBeginDate.text,
                                     endDateString: _controllerEndDate.text,
                                     startTimeString: _controllerStartTime.text,
                                     endTimeString: _controllerEndTime.text);
+                            Navigator.pop(context);
                           },
                         ),
                       ),

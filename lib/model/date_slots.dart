@@ -1,24 +1,14 @@
 class TimeSlot {
-  final int hour;
-  final int minute;
+  final String id;
+  final DateTime dateTime;
   bool isSelected;
   bool isBlocked;
 
-  TimeSlot(
-    this.hour, [
-    this.minute = 0,
-  ])  : isSelected = false,
-        isBlocked = false;
+  DateTime get date => DateTime(dateTime.year, dateTime.month, dateTime.day);
+
+  TimeSlot(this.id,this.dateTime, {this.isBlocked = false, this.isSelected = false});
 
   void toggleSelected() {
     isSelected = !isSelected;
-  }
-
-  void toggleBlocked() {
-    isBlocked = true;
-  }
-
-  void toggleUnblocked() {
-    isBlocked = false;
   }
 }

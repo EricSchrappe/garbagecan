@@ -83,7 +83,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
               if (_isSameDay(
                 Provider.of<PickupData>(context, listen: false)
                     .getActivePickups(loggedInUser.uid)[0]
-                    .time,
+                    .time
+                    .dateTime,
                 selectedDate,
               )) {
                 AwesomeDialog(
@@ -260,7 +261,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                   ),
                   child: TableCalendar(
-                    events: Provider.of<DateSlotsData>(context).dateSlots,
+                    events: Provider.of<DateSlotsData>(context).events(),
                     calendarController: _calendarController,
                     calendarStyle: CalendarStyle(
                       selectedColor: Color(0xFF3A6ED4),
