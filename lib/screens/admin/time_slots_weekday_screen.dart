@@ -18,8 +18,6 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
   int weekday = 1;
   List<bool> isSelected = [true, false, false, false, false, false, false];
 
-  GlobalKey<ScaffoldState> _scaffold = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,7 +34,6 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
         ),
       ),
       child: Scaffold(
-        key: _scaffold,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -269,9 +266,6 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
                                     timeRange: _currentSliderValueTime.round(),
                                     startTimeString: _controllerStartTime.text,
                                     endTimeString: _controllerEndTime.text);
-                            _scaffold.currentState.showSnackBar(SnackBar(
-                              content: Text("Timeslots added"),
-                            ));
                             Navigator.pop(context);
                           },
                         ),
