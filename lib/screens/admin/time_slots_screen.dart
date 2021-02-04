@@ -15,6 +15,8 @@ class _TimeSlotsState extends State<TimeSlots> {
   TextEditingController _controllerStartTime = TextEditingController();
   TextEditingController _controllerEndTime = TextEditingController();
 
+  GlobalKey<ScaffoldState> _scaffold = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,6 +33,7 @@ class _TimeSlotsState extends State<TimeSlots> {
         ),
       ),
       child: Scaffold(
+        key: _scaffold,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -147,13 +150,17 @@ class _TimeSlotsState extends State<TimeSlots> {
                             style:
                                 TextStyle(color: Colors.white, fontSize: 24.0),
                           ),
-                          onPressed: () {
-                            Provider.of<DateSlotsData>(context, listen: false)
+                          onPressed: () async {
+                            await Provider.of<DateSlotsData>(context,
+                                    listen: false)
                                 .addDateSlots(
                                     beginDateString: _controllerBeginDate.text,
                                     endDateString: _controllerEndDate.text,
                                     startTimeString: _controllerStartTime.text,
                                     endTimeString: _controllerEndTime.text);
+                            _scaffold.currentState.showSnackBar(SnackBar(
+                              content: Text("Timeslots added"),
+                            ));
                           },
                         ),
                       ),

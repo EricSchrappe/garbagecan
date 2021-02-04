@@ -21,8 +21,8 @@ class PickupTileView extends StatelessWidget {
             itemBuilder: (context, index) {
               final pickup = pData.getActivePickups(userID)[index];
               return PickupTile(
-                dateText: DateFormat.yMd().format(pickup.time),
-                timeText: DateFormat.Hm().format(pickup.time),
+                dateText: DateFormat.yMd().format(pickup.time.dateTime),
+                timeText: DateFormat.Hm().format(pickup.time.dateTime),
               );
             },
             itemCount: pData.getActivePickups(userID) == null
