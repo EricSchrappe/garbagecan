@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:garbagecan/model/km_range_data.dart';
 import 'package:garbagecan/services/location_data.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:provider/provider.dart';
 
 class HeadquarterScreen extends StatelessWidget {
   @override
@@ -131,6 +133,92 @@ class HeadquarterScreen extends StatelessWidget {
                             'gps': GeoPoint(coord.latitude, coord.longitude),
                           });
                         },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5.0, vertical: 10.0),
+                            decoration: BoxDecoration(
+                                color: Color(0xFF3A6ED4),
+                                borderRadius: BorderRadius.circular(5.0)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Radius',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18.0),
+                                ),
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18.0),
+                                ),
+                                Text(
+                                  'Edit',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18.0),
+                                ),
+                                Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Consumer<KmRangeData>(
+                            builder: (context, kmData, child) {
+                              return ListView.builder(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  final price = kmData.price[index];
+                                  final radius = kmData.radius[index];
+
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 15.0, vertical: 10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '$radius',
+                                          style: TextStyle(fontSize: 18.0),
+                                        ),
+                                        Text(
+                                          '$price',
+                                          style: TextStyle(fontSize: 18.0),
+                                        ),
+                                        GestureDetector(
+                                          child: Icon(Icons.edit),
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                                context, '/edit',
+                                                arguments: index);
+                                          },
+                                        ),
+                                        GestureDetector(
+                                          child: Icon(Icons.delete_forever),
+                                          onTap: () {},
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                                itemCount: kmData.price.length,
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ],

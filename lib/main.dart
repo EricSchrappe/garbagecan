@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:garbagecan/model/date_slots_data.dart';
 import 'package:garbagecan/model/item_data.dart';
+import 'package:garbagecan/model/km_range_data.dart';
+import 'package:garbagecan/screens/admin/edit_km_range.dart';
 import 'package:garbagecan/screens/admin/headquarters_screen.dart';
 import 'package:garbagecan/screens/admin/pickup_overview_screen.dart';
 import 'package:garbagecan/screens/admin/time_slots_weekday_screen.dart';
@@ -30,6 +32,9 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => PickupData(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => KmRangeData(),
+        ),
       ],
       child: GarbageCANApp(),
     ),
@@ -56,6 +61,7 @@ class GarbageCANApp extends StatelessWidget {
         '/headquarters': (context) => HeadquarterScreen(),
         '/trash': (context) => TrashItemsScreen(),
         '/allpickups': (context) => PickupOverviewScreen(),
+        '/edit': (context) => EditKmRangeScreen(),
       },
     );
   }
