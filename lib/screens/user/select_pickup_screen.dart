@@ -5,9 +5,8 @@ import 'package:provider/provider.dart';
 
 class SelectPickUpScreen extends StatefulWidget {
   final selectedDate;
-  final address;
 
-  SelectPickUpScreen({this.selectedDate, this.address});
+  SelectPickUpScreen({this.selectedDate});
 
   @override
   _SelectPickUpScreenState createState() => _SelectPickUpScreenState();
@@ -83,7 +82,6 @@ class _SelectPickUpScreenState extends State<SelectPickUpScreen> {
                           Navigator.pushNamed(context, '/contact',
                               arguments: <String, dynamic>{
                                 'selectedDate': widget.selectedDate,
-                                'address': widget.address
                               });
                         }
                       })

@@ -8,7 +8,7 @@ class ItemTileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10.0),
-      height: MediaQuery.of(context).size.height * 0.2,
+      height: MediaQuery.of(context).size.height * 0.35,
       child: Consumer<ItemData>(
         builder: (context, itemData, child) {
           return ListView.builder(
@@ -18,6 +18,8 @@ class ItemTileView extends StatelessWidget {
               final item = itemData.items[index];
               return ItemTile(
                 itemText: item.name,
+                itemValue: item.value,
+                itemUnit: item.unit,
                 isChecked: item.isChecked,
                 checkboxCallback: (checkboxState) {
                   itemData.updateCheckbox(item);

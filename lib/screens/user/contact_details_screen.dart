@@ -1,11 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:garbagecan/components/tiles/item_tile_view.dart';
-import 'package:garbagecan/model/date_slots_data.dart';
-import 'package:garbagecan/model/item_data.dart';
-import 'package:garbagecan/model/pickup_data.dart';
-import 'package:provider/provider.dart';
+import 'package:garbagecan/services/location_data.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class ContactDetails extends StatefulWidget {
   @override
@@ -19,7 +16,13 @@ class _ContactDetailsState extends State<ContactDetails> {
 
   final TextEditingController _phoneController = TextEditingController();
 
+  final TextEditingController _textController = TextEditingController();
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  bool showSpinner = false;
+
+  LocationData location = LocationData();
 
   User loggedInUser;
 
@@ -35,6 +38,7 @@ class _ContactDetailsState extends State<ContactDetails> {
   void initState() {
     super.initState();
     getCurrentUser();
+    location.getLocation();
   }
 
   @override
@@ -47,7 +51,7 @@ class _ContactDetailsState extends State<ContactDetails> {
     final Map args = ModalRoute.of(context).settings.arguments;
 
     final selectedDate = args.values.first;
-    final address = args.values.last;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -62,228 +66,275 @@ class _ContactDetailsState extends State<ContactDetails> {
         ),
       ),
       child: Scaffold(
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  top: 60.0, right: 35.0, left: 35.0, bottom: 30.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Card(
-                    elevation: 5.0,
-                    shape: CircleBorder(),
-                    child: CircleAvatar(
-                      child: Icon(
-                        Icons.restore_from_trash,
-                        size: 35.0,
-                        color: Color(0xFF3A6ED4),
-                      ),
-                      radius: 35.0,
-                      backgroundColor: Colors.white,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Text(
-                    'Please fill in your contact information',
-                    style: TextStyle(
-                      color: Color(0xFF444444),
-                      fontSize: 22.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
-                ),
+        body: ModalProgressHUD(
+          inAsyncCall: showSpinner,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 60.0, right: 35.0, left: 35.0, bottom: 30.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Name',
-                      style: TextStyle(
-                        color: Color(0xFF444444),
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    TextField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xFFF6F6F6),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF3A6ED4),
-                          ),
+                    Card(
+                      elevation: 5.0,
+                      shape: CircleBorder(),
+                      child: CircleAvatar(
+                        child: Icon(
+                          Icons.restore_from_trash,
+                          size: 35.0,
+                          color: Color(0xFF3A6ED4),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF3A6ED4),
-                          ),
-                        ),
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(8.0),
+                        radius: 35.0,
+                        backgroundColor: Colors.white,
                       ),
-                      onSubmitted: (name) {
-                        _nameController.text = name;
-                      },
                     ),
                     SizedBox(
-                      height: 15.0,
+                      height: 20.0,
                     ),
                     Text(
-                      'Email',
+                      'Please fill in your contact information',
                       style: TextStyle(
                         color: Color(0xFF444444),
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    TextField(
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xFFF6F6F6),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF3A6ED4),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF3A6ED4),
-                          ),
-                        ),
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(8.0),
-                      ),
-                      onSubmitted: (email) {
-                        _emailController.text = email;
-                      },
-                    ),
-                    SizedBox(
-                      height: 15.0,
-                    ),
-                    Text(
-                      'Phone Number',
-                      style: TextStyle(
-                        color: Color(0xFF444444),
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      controller: _phoneController,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xFFF6F6F6),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF3A6ED4),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF3A6ED4),
-                          ),
-                        ),
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(8.0),
-                      ),
-                      onSubmitted: (phoneNumber) {
-                        _phoneController.text = phoneNumber;
-                      },
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Text(
-                      'Select your items',
-                      style: TextStyle(
-                        color: Color(0xFF444444),
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    Expanded(flex: 8, child: ItemTileView()),
-                    Expanded(
-                      flex: 4,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 15.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            RaisedButton(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                child: Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 24.0),
-                                ),
-                                color: Colors.grey,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                }),
-                            RaisedButton(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              color: Color(0xFF3A6ED4),
-                              child: Text(
-                                'Request PickUp',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 24.0),
-                              ),
-                              onPressed: () {
-                                final timeSlot = Provider.of<DateSlotsData>(
-                                        context,
-                                        listen: false)
-                                    .getSelectedTime(selectedDate);
-                                Provider.of<PickupData>(context, listen: false)
-                                    .addPickup(Pickup(
-                                  id: timeSlot.id,
-                                  uid: loggedInUser.uid,
-                                  address: address,
-                                  email: _emailController.text,
-                                  name: _nameController.text,
-                                  phoneNumber: _phoneController.text,
-                                  time: timeSlot,
-                                  items: Provider.of<ItemData>(context,
-                                          listen: false)
-                                      .getSelectedItems(),
-                                ));
-                                print(Provider.of<PickupData>(context,
-                                        listen: false)
-                                    .pickupData
-                                    .length);
-                                print(Provider.of<PickupData>(context,
-                                        listen: false)
-                                    .pickupData);
-                                Provider.of<ItemData>(context, listen: false)
-                                    .uncheckItems();
-                                Navigator.pushNamed(context, '/thanks');
-                              },
-                            ),
-                          ],
-                        ),
+                        fontSize: 22.0,
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Name',
+                        style: TextStyle(
+                          color: Color(0xFF444444),
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      TextField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color(0xFFF6F6F6),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF3A6ED4),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF3A6ED4),
+                            ),
+                          ),
+                        ),
+                        onSubmitted: (name) {
+                          _nameController.text = name;
+                        },
+                      ),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      Text(
+                        'Email',
+                        style: TextStyle(
+                          color: Color(0xFF444444),
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color(0xFFF6F6F6),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF3A6ED4),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF3A6ED4),
+                            ),
+                          ),
+                        ),
+                        onSubmitted: (email) {
+                          _emailController.text = email;
+                        },
+                      ),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      Text(
+                        'Address',
+                        style: TextStyle(
+                          color: Color(0xFF444444),
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 10,
+                            child: TextField(
+                              controller: _textController,
+                              readOnly:
+                                  _textController.text != null ? true : false,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Color(0xFFF6F6F6),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFF3A6ED4),
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFF3A6ED4),
+                                  ),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    Icons.clear,
+                                    color: Color(0xFF3A6ED4),
+                                  ),
+                                  onPressed: () => _textController.clear(),
+                                ),
+                              ),
+                              onSubmitted: (address) {
+                                _textController.text = address;
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              child: Icon(
+                                Icons.gps_fixed_rounded,
+                                color: Color(0xFF3A6ED4),
+                                size: 32.0,
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  showSpinner = true;
+                                });
+                                location
+                                    .getAddressForCoordinates()
+                                    .then((String address) {
+                                  setState(() {
+                                    _textController.text = address;
+                                    showSpinner = false;
+                                  });
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      Text(
+                        'Phone Number',
+                        style: TextStyle(
+                          color: Color(0xFF444444),
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        controller: _phoneController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color(0xFFF6F6F6),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF3A6ED4),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF3A6ED4),
+                            ),
+                          ),
+                        ),
+                        onSubmitted: (phoneNumber) {
+                          _phoneController.text = phoneNumber;
+                        },
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 15.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              RaisedButton(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 24.0),
+                                  ),
+                                  color: Colors.grey,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  }),
+                              RaisedButton(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                color: Color(0xFF3A6ED4),
+                                child: Text(
+                                  'Go to Trash Items',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 24.0),
+                                ),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/selecttrash',
+                                      arguments: {
+                                        'name': _nameController.text,
+                                        'email': _emailController.text,
+                                        'phone': _phoneController.text,
+                                        'address': _textController.text,
+                                        'selectedDate': selectedDate,
+                                      });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -7,6 +7,7 @@ import 'package:garbagecan/screens/admin/headquarters_screen.dart';
 import 'package:garbagecan/screens/admin/pickup_overview_screen.dart';
 import 'package:garbagecan/screens/admin/time_slots_weekday_screen.dart';
 import 'package:garbagecan/screens/admin/trash_items_screen.dart';
+import 'package:garbagecan/screens/user/select_item_screen.dart';
 import 'package:garbagecan/screens/user/thank_you_screen.dart';
 import 'model/pickup_data.dart';
 import 'screens/admin/welcome_admin_screen.dart';
@@ -62,6 +63,7 @@ class GarbageCANApp extends StatelessWidget {
         '/trash': (context) => TrashItemsScreen(),
         '/allpickups': (context) => PickupOverviewScreen(),
         '/edit': (context) => EditKmRangeScreen(),
+        '/selecttrash': (context) => SelectTrashItemsScreen(),
       },
     );
   }
