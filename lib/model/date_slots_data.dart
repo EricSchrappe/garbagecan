@@ -15,6 +15,7 @@ class DateSlotsData extends ChangeNotifier {
         .snapshots()
         .listen((snapshot) {
       timeSlots = snapshot.docs.map((doc) {
+        if (!doc.data().containsKey('time')) print(doc.id);
         final datetime = doc['time'].toDate();
         return TimeSlot(doc.id, datetime, isBlocked: doc['taken']);
       }).toList();
@@ -65,13 +66,13 @@ class DateSlotsData extends ChangeNotifier {
           {
             'taken': false,
             'time_range': minutesDuration * 60000,
-            'time': DateTime(
+            'time': Timestamp.fromDate(DateTime(
               beginDate.year,
               beginDate.month,
               beginDate.day + i,
               startTime.hour,
               startTime.minute + j,
-            ),
+            )),
           },
         );
       }
@@ -101,13 +102,13 @@ class DateSlotsData extends ChangeNotifier {
           {
             'taken': false,
             'time_range': timeRange * 60000,
-            'time': DateTime(
+            'time': Timestamp.fromDate(DateTime(
               wday.year,
               wday.month,
               wday.day,
               startTime.hour,
               startTime.minute + j,
-            ),
+            )),
           },
         );
       }

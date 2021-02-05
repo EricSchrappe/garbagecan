@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:garbagecan/api.dart';
 import 'package:garbagecan/model/date_slots.dart';
 import 'package:garbagecan/model/item.dart';
 
@@ -40,6 +39,7 @@ class Pickup {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'taken': true,
       'uid': uid,
       'email': email,
       'name': name,
@@ -48,6 +48,24 @@ class Pickup {
       'time': time.dateTime.toIso8601String(),
       'trashItems': items.map((i) => i.toJson()).toList(),
       'gps': gps.toString(),
+    };
+  }
+
+  Map<String, dynamic> toDocument() {
+    return {
+      'id': id,
+      'taken': true,
+      'uid': uid,
+      'email': email,
+      'name': name,
+      'address': address,
+      'phoneNumber': phoneNumber,
+      'time': Timestamp.fromDate(time.dateTime),
+      'trashItems': items
+          .map((i) =>
+              FirebaseFirestore.instance.collection('trashItems').doc(i.id))
+          .toList(),
+      'gps': gps,
     };
   }
 }
@@ -88,13 +106,10 @@ class PickupData extends ChangeNotifier {
   }
 
   void addPickup(Pickup pickup) {
-    requestPickup(pickup);
-    // TODO: this should be removed when pickup requests work on the server
-    if (_pickups[pickup.uid] != null) {
-      _pickups[pickup.uid].add(pickup);
-    } else {
-      _pickups[pickup.uid] = [pickup];
-    }
+    FirebaseFirestore.instance
+        .collection('pickups')
+        .doc(pickup.id)
+        .set(pickup.toDocument());
   }
 
   List<Pickup> getActivePickups(String uid) {
