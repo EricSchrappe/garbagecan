@@ -5,13 +5,18 @@ import 'package:garbagecan/services/location_data.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:provider/provider.dart';
 
-class HeadquarterScreen extends StatelessWidget {
+class HeadquarterScreen extends StatefulWidget {
+  @override
+  _HeadquarterScreenState createState() => _HeadquarterScreenState();
+}
+
+class _HeadquarterScreenState extends State<HeadquarterScreen> {
+  final TextEditingController _controllerText = TextEditingController();
+  final LocationData location = LocationData();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _controllerText = TextEditingController();
-    final LocationData location = LocationData();
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -84,8 +89,7 @@ class HeadquarterScreen extends StatelessWidget {
                       height: 10.0,
                     ),
                     TextField(
-                      controller: _controllerText
-                        ..text = 'Straße des 17. Juni 135, 10623 Berlin',
+                      controller: _controllerText,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Color(0xFFF6F6F6),
@@ -101,9 +105,10 @@ class HeadquarterScreen extends StatelessWidget {
                         ),
                         isDense: true,
                         contentPadding: EdgeInsets.all(8.0),
+                        hintText: 'Straße des 17. Juni 135, 10623 Berlin',
                         helperText: 'Format: Street Number, Postal code City',
                       ),
-                      onSubmitted: (name) async {
+                      onSubmitted: (name) {
                         _controllerText.text = name;
                       },
                     ),

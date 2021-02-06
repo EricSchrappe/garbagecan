@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garbagecan/components/tiles/item_tile_view.dart';
@@ -40,6 +41,7 @@ class _SelectTrashItemsScreenState extends State<SelectTrashItemsScreen> {
     Map args = ModalRoute.of(context).settings.arguments;
 
     DateTime selectedDate;
+    GeoPoint gps;
     String name;
     String phone;
     String email;
@@ -56,6 +58,8 @@ class _SelectTrashItemsScreenState extends State<SelectTrashItemsScreen> {
         selectedDate = value;
       } else if (key == 'address') {
         address = value;
+      } else if (key == 'gps') {
+        gps = value;
       }
     });
 
@@ -127,9 +131,9 @@ class _SelectTrashItemsScreenState extends State<SelectTrashItemsScreen> {
                         fontSize: 18.0,
                       ),
                     ),
-                    Expanded(flex: 8, child: ItemTileView()),
+                    Expanded(flex: 15, child: ItemTileView()),
                     Expanded(
-                      flex: 4,
+                      flex: 3,
                       child: Padding(
                         padding: EdgeInsets.only(top: 15.0),
                         child: Row(
@@ -167,6 +171,7 @@ class _SelectTrashItemsScreenState extends State<SelectTrashItemsScreen> {
                                   id: timeSlot.id,
                                   uid: loggedInUser.uid,
                                   address: address,
+                                  gps: gps,
                                   email: email,
                                   name: name,
                                   phoneNumber: phone,

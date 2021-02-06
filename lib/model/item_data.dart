@@ -40,23 +40,40 @@ class ItemData extends ChangeNotifier {
   List<Item> getSelectedItems() => _items.where((i) => i.isChecked).toList();
 
   void updateTrashItemValues(Map<String, int> newValues) {
-    newValues.forEach((key, value) {
+    /*newValues.forEach((key, newValue) {
       FirebaseFirestore.instance
           .collection('trashItems')
           .doc(key)
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         if (documentSnapshot.exists) {
-          if (value != documentSnapshot.data()['value']) {
-            FirebaseFirestore.instance
-                .collection('trashItems')
-                .doc(key)
-                .update({'value': value});
+          if (newValue != documentSnapshot.data()['value']) {
+            documentSnapshot.data().update('value', (value) {
+              value = newValue;
+              print(value);
+            });
           }
         } else {
           print('Document does not exist on the database');
         }
+      });*/
+
+    newValues.forEach((key, newValue) {
+      FirebaseFirestore.instance
+          .collection('trashItems')
+          .snapshots()
+          .forEach((element) {
+        print(element.docs.map((e) {
+          if (e.data()['value'] != newValue) {
+            e.data().update('value', (value) {
+              value = newValue;
+              print(value);
+            });
+          }
+        }));
       });
     });
+
+    notifyListeners();
   }
 }

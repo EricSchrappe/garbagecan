@@ -25,6 +25,7 @@ class Pickup {
     @required this.phoneNumber,
     @required this.time,
     @required this.items,
+    @required this.gps,
     this.deleted = false,
   });
 

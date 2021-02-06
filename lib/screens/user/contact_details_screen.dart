@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -322,6 +323,8 @@ class _ContactDetailsState extends State<ContactDetails> {
                                         'phone': _phoneController.text,
                                         'address': _textController.text,
                                         'selectedDate': selectedDate,
+                                        'gps': GeoPoint(location.latitude,
+                                            location.longitude),
                                       });
                                 },
                               ),
