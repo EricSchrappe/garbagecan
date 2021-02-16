@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:garbagecan/components/tiles/pickup_tile.dart';
 import 'package:garbagecan/model/pickup_data.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PickupTileView extends StatelessWidget {
-  final userID;
+  final String userID;
 
   PickupTileView({this.userID});
 
@@ -21,8 +20,7 @@ class PickupTileView extends StatelessWidget {
             itemBuilder: (context, index) {
               final pickup = pData.getActivePickups(userID)[index];
               return PickupTile(
-                dateText: DateFormat.yMd().format(pickup.time.dateTime),
-                timeText: DateFormat.Hm().format(pickup.time.dateTime),
+                pickup: pickup,
               );
             },
             itemCount: pData.getActivePickups(userID) == null

@@ -4,7 +4,6 @@ import 'package:garbagecan/model/date_slots.dart';
 import 'package:intl/intl.dart';
 
 class DateSlotsData extends ChangeNotifier {
-  // TODO: Update to data from API
   List<TimeSlot> timeSlots = [];
 
   DateSlotsData() {

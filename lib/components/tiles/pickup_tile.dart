@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:garbagecan/model/pickup_data.dart';
+import 'package:intl/intl.dart';
 
 class PickupTile extends StatelessWidget {
-  final dateText;
-  final timeText;
+  final Pickup pickup;
 
-  PickupTile({this.dateText, this.timeText});
+  const PickupTile({this.pickup});
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +33,12 @@ class PickupTile extends StatelessWidget {
             children: [
               Icon(Icons.event_note),
               Text(
-                dateText,
+                DateFormat.yMd().format(pickup.time.dateTime),
                 style: TextStyle(fontSize: 18.0),
               ),
               Icon(Icons.alarm),
               Text(
-                timeText,
+                DateFormat.Hm().format(pickup.time.dateTime),
                 style: TextStyle(fontSize: 18.0),
               ),
               GestureDetector(
@@ -50,7 +52,30 @@ class PickupTile extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text(
+                                "Are you sure you want to cancel your pickup?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('No'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection('pickups')
+                                      .doc(pickup.id)
+                                      .update({'taken': false});
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Yes'),
+                              ),
+                            ],
+                          ));
+                },
               ),
             ],
           ),
