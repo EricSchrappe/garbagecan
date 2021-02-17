@@ -4,9 +4,9 @@ import 'package:garbagecan/model/item_data.dart';
 import 'package:provider/provider.dart';
 
 class TrashItemsScreen extends StatelessWidget {
+  final Map<String, int> newValues = {};
   @override
   Widget build(BuildContext context) {
-    Map<String, int> trashNewValues = {};
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -122,9 +122,12 @@ class TrashItemsScreen extends StatelessWidget {
                                             isDense: true,
                                             contentPadding: EdgeInsets.all(8.0),
                                           ),
-                                          onSubmitted: (value) {
-                                            trashNewValues['${item.id}'] =
-                                                int.parse(value);
+                                          onChanged: (value) {
+                                            if (value.length > 0)
+                                              newValues[item.id] =
+                                                  int.parse(value);
+                                            else
+                                              newValues.remove(item.id);
                                           },
                                         ),
                                       ),
@@ -157,8 +160,8 @@ class TrashItemsScreen extends StatelessWidget {
                         ),
                         onPressed: () {
                           Provider.of<ItemData>(context, listen: false)
-                              .updateTrashItemValues(trashNewValues);
-                          Navigator.pop(context);
+                              .updateTrashItemValues(newValues);
+                          newValues.clear();
                         },
                       ),
                     )

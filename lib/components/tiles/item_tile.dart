@@ -7,7 +7,7 @@ class ItemTile extends StatelessWidget {
   final String itemUnit;
   final Function checkboxCallback;
 
-  ItemTile({
+  const ItemTile({
     this.isChecked,
     this.itemText,
     this.itemValue,
