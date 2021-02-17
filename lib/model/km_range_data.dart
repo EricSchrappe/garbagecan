@@ -13,14 +13,17 @@ class KmRangeData extends ChangeNotifier {
         .doc('km_ranges')
         .snapshots()
         .listen((snapshot) {
+      _price.clear();
+      _radius.clear();
       snapshot.data().forEach((key, value) {
         if (key == 'price') {
-          for (var ele in value) {
-            _price.add(double.parse(ele.toString()));
+          for (num ele in value) {
+            _price.add(ele.toDouble());
           }
-        } else {
-          for (var ele in value) {
-            _radius.add(double.parse(ele.toString()));
+        }
+        if (key == 'radius') {
+          for (num ele in value) {
+            _radius.add(ele.toDouble());
           }
         }
       });
@@ -36,5 +39,20 @@ class KmRangeData extends ChangeNotifier {
     return UnmodifiableListView<double>(_radius);
   }
 
-  void updateKmRange(int index, double newPrice, double newRadius) {}
+  void updateKmRange(int index, double newPrice, double newRadius) {
+    FirebaseFirestore.instance
+        .collection('admin')
+        .doc('km_ranges')
+        .get()
+        .then((snapshot) {
+      final prices = snapshot['price'];
+      prices[index] = newPrice;
+      final radii = snapshot['radius'];
+      radii[index] = newRadius;
+      FirebaseFirestore.instance.collection('admin').doc('km_ranges').update({
+        'price': prices,
+        'radius': radii,
+      });
+    });
+  }
 }

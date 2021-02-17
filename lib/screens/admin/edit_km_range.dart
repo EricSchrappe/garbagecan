@@ -102,9 +102,6 @@ class EditKmRangeScreen extends StatelessWidget {
                         isDense: true,
                         contentPadding: EdgeInsets.all(8.0),
                       ),
-                      onSubmitted: (value) {
-                        _controllerRadius.text = value;
-                      },
                     ),
                     SizedBox(
                       height: 20.0,
@@ -140,9 +137,6 @@ class EditKmRangeScreen extends StatelessWidget {
                         isDense: true,
                         contentPadding: EdgeInsets.all(8.0),
                       ),
-                      onSubmitted: (value) {
-                        _controllerPrice.text = value;
-                      },
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 30.0),
@@ -176,7 +170,7 @@ class EditKmRangeScreen extends StatelessWidget {
                                   .updateKmRange(
                                 index,
                                 double.parse(_controllerPrice.text),
-                                double.parse(_controllerPrice.text),
+                                double.parse(_controllerRadius.text),
                               );
                               Navigator.pop(context);
                             },

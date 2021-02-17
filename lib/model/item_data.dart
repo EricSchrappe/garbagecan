@@ -46,7 +46,5 @@ class ItemData extends ChangeNotifier {
           .doc(key)
           .update({'value': newValue});
     });
-
-    notifyListeners();
   }
 }
