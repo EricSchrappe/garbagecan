@@ -71,7 +71,7 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
             ),
             Center(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
+                padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 25.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(
@@ -94,7 +94,7 @@ class _TimeSlotsWeekdayState extends State<TimeSlotsWeekday> {
                       fillColor: Color(0xFF3A6ED4),
                       selectedColor: Colors.white,
                       borderRadius: BorderRadius.circular(5.0),
-                      borderWidth: 1.75,
+                      borderWidth: 1.5,
                       borderColor: Color(0xFF3A6ED4),
                       selectedBorderColor: Color(0xFF3A6ED4),
                       onPressed: (int index) {

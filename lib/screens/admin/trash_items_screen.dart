@@ -101,7 +101,6 @@ class TrashItemsScreen extends StatelessWidget {
                                         flex: 2,
                                         child: TextField(
                                           textAlign: TextAlign.center,
-                                          keyboardType: TextInputType.number,
                                           inputFormatters: [
                                             FilteringTextInputFormatter
                                                 .digitsOnly
@@ -162,6 +161,7 @@ class TrashItemsScreen extends StatelessWidget {
                           Provider.of<ItemData>(context, listen: false)
                               .updateTrashItemValues(newValues);
                           newValues.clear();
+                          Navigator.pop(context);
                         },
                       ),
                     )
